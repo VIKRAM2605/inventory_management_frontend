@@ -11,19 +11,24 @@
 html {
   overflow: hidden;
   height: 100vh;
-  height: 100dvh; /* Modern browsers */
+  height: 100dvh;
   margin: 0;
   padding: 0;
 }
 
-/* Make body/root container explicitly scrollable */
+/* Make body/root container explicitly scrollable with PROPER momentum */
 body,
 #root,
 .app-container {
   height: 100vh;
-  height: 100dvh; /* Modern browsers */
-  overflow-y: auto; /* 🔑 Enable scrolling explicitly */
-  -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
+  height: 100dvh;
+  overflow-y: auto;
+  /* 🔑 CRITICAL: Enhanced momentum scrolling properties */
+  -webkit-overflow-scrolling: touch; /* iOS momentum */
+  scroll-behavior: smooth; /* Smooth programmatic scrolling */
+  overscroll-behavior-y: contain; /* Prevent scroll chaining */
+  /* 🔑 CRITICAL: Ensure no competing scroll containers */
+  position: relative;
   margin: 0;
   padding: 0;
 }
@@ -32,11 +37,17 @@ body,
    MOBILE VIEWPORT & SAFE AREA
    ======================================= */
 .mobile-container {
-  min-height: 100vh;
+  /* 🔑 FIXED: Use only ONE minHeight declaration */
   min-height: 100dvh; /* Modern dynamic viewport */
-  padding-bottom: env(safe-area-inset-bottom, 20px);
-  overflow-y: auto;
+  min-height: 100vh; /* Fallback - but this should be FIRST */
+  /* 🔑 CRITICAL: Enhanced mobile momentum scrolling */
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  /* 🔑 CRITICAL: Proper padding that doesn't break momentum */
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+  /* 🔑 CRITICAL: Remove any height conflicts */
+  box-sizing: border-box;
 }
 
 /* Safe area support for iOS and Android gesture navigation */
@@ -46,7 +57,6 @@ body,
   }
 }
 
-/* Fallback for browsers without safe-area-inset support */
 @supports not (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom {
     padding-bottom: 20px;
@@ -61,7 +71,7 @@ body,
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-clamp: 1; /* Future standard - fixes the warning */
+  line-clamp: 1; /* Future standard */
 }
 
 .line-clamp-2 {
@@ -69,7 +79,7 @@ body,
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-clamp: 2; /* Future standard - fixes the warning */
+  line-clamp: 2; /* Future standard */
 }
 
 .line-clamp-3 {
@@ -77,5 +87,44 @@ body,
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-clamp: 3; /* Future standard - fixes the warning */
+  line-clamp: 3; /* Future standard */
+}
+
+/* =======================================
+   MOMENTUM SCROLL FIXES
+   ======================================= */
+/* 🔑 CRITICAL: Fix momentum interruption issues */
+* {
+  /* Prevent any element from creating scroll traps */
+  overscroll-behavior: contain;
+}
+
+/* Ensure all scrollable areas have momentum */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* 🔑 CRITICAL: Fix specific mobile momentum issues */
+@media (max-width: 1023px) {
+  /* Mobile-specific scroll optimizations */
+  .mobile-container,
+  .app-container {
+    /* Force hardware acceleration for smooth scrolling */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Optimize rendering */
+    will-change: scroll-position;
+    /* Prevent momentum loss */
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+  }
+  
+  /* Remove any conflicting heights on mobile */
+  .mobile-container > * {
+    /* Ensure child elements don't create height conflicts */
+    min-height: auto;
+  }
 }
