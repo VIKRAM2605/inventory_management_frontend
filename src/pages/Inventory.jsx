@@ -56,7 +56,7 @@ const ProductImage = React.memo(({ product, size = 'medium' }) => {
 
             {/* Enlarged Image Modal */}
             {showEnlarged && (
-                <div
+                <div 
                     className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
                     onClick={handleCloseEnlarged}
                 >
@@ -70,7 +70,7 @@ const ProductImage = React.memo(({ product, size = 'medium' }) => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-
+                        
                         {/* Enlarged image */}
                         <img
                             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
@@ -78,7 +78,7 @@ const ProductImage = React.memo(({ product, size = 'medium' }) => {
                             alt={product.name}
                             onClick={(e) => e.stopPropagation()}
                         />
-
+                        
                         {/* Product name caption */}
                         <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 rounded-b-lg">
                             <p className="text-center font-medium">{toTitleCase(product.name)}</p>
@@ -320,12 +320,20 @@ const Inventory = () => {
         try {
             setLoading(true);
             setError(null);
+            showAlert('info', 'Loading inventory...');
+
             const [productsResponse] = await Promise.all([
                 productsAPI.getAll(),
                 fetchSalesData() // Fetch both simultaneously
             ]);
 
             setProducts(productsResponse.data || []);
+
+            if ((productsResponse.data || []).length === 0) {
+                showAlert('info', 'No products found. Add your first product to get started!');
+            } else {
+                showAlert('success', `Successfully loaded ${(productsResponse.data || []).length} products`);
+            }
         } catch (error) {
             console.error('Error fetching products:', error);
             const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
@@ -345,11 +353,13 @@ const Inventory = () => {
     const handleAddProduct = useCallback(() => {
         setEditingProduct(null);
         setShowForm(true);
+        showAlert('info', 'Opening form to add new product');
     }, [showAlert]);
 
     const handleEditProduct = useCallback((product) => {
         setEditingProduct(product);
         setShowForm(true);
+        showAlert('info', `Editing product: ${toTitleCase(product.name)}`);
     }, [showAlert]);
 
     const handleDeleteProduct = useCallback(async (productId, productName) => {
@@ -359,6 +369,7 @@ const Inventory = () => {
             try {
                 showAlert('warning', 'Deleting product...');
                 await inventoryAPI.delete(productId);
+                showAlert('success', `Product "${toTitleCase(productName)}" deleted successfully`);
                 await fetchProducts(); // Refresh the list
             } catch (error) {
                 console.error('Error deleting product:', error);
@@ -373,14 +384,17 @@ const Inventory = () => {
     const handleFormClose = useCallback(() => {
         setShowForm(false);
         setEditingProduct(null);
+        showAlert('info', 'Form closed. Refreshing inventory...');
         fetchProducts(); // Refresh the list after form closes
     }, [fetchProducts, showAlert]);
 
     const handleRetry = useCallback(() => {
+        showAlert('info', 'Retrying to load inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
     const handleRefresh = useCallback(() => {
+        showAlert('info', 'Refreshing inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
@@ -390,7 +404,7 @@ const Inventory = () => {
         const inStockCount = products.filter(p => (p.stock_quantity || 0) > 10).length;
         const lowStockCount = products.filter(p => (p.stock_quantity || 0) > 0 && (p.stock_quantity || 0) <= 10).length;
         const outOfStockCount = products.filter(p => (p.stock_quantity || 0) === 0).length;
-
+        
         // NEW: Calculate total stock quantity across all products
         const totalStockQuantity = products.reduce((total, product) => {
             return total + parseInt(product.stock_quantity || 0);
@@ -407,7 +421,7 @@ const Inventory = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex justify-center items-center bg-gray-50 p-4">
+            <div className="app-container flex justify-center items-center bg-gray-50 p-4">
                 <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 border-b-2 border-blue-600"></div>
                 <p className="ml-3 xs:ml-4 text-gray-600 text-sm xs:text-base">Loading inventory...</p>
             </div>
@@ -416,7 +430,7 @@ const Inventory = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-50 p-2 xs:p-4 sm:p-6 lg:p-8">
+            <div className="app-container bg-gray-50 p-2 xs:p-4 sm:p-6 lg:p-8">
                 <Alert
                     isOpen={alert.isOpen}
                     severity={alert.severity}
@@ -440,7 +454,7 @@ const Inventory = () => {
     }
 
     return (
-        <>
+        <div className="app-container"> {/* 🔑 Main scrollable wrapper */}
             {/* Alert Component */}
             <Alert
                 isOpen={alert.isOpen}
@@ -452,7 +466,7 @@ const Inventory = () => {
             />
 
             {/* Desktop Layout - Fixed Header with Scrollable Content */}
-            <div className="hidden lg:flex lg:flex-col lg:h-screen lg:bg-gray-50">
+            <div className="hidden lg:flex lg:flex-col lg:bg-gray-50" style={{ height: '100vh' }}>
                 {/* Fixed Header Section - Desktop Only */}
                 <div className="bg-white border-b border-gray-200 flex-shrink-0">
                     <div className="px-2 xs:px-4 sm:px-6 lg:px-8 py-3 xs:py-4 sm:py-6">
@@ -467,7 +481,7 @@ const Inventory = () => {
                                 </p>
                             </div>
                             <div className="flex items-center gap-3 w-full sm:w-auto">
-                                {/* Refresh Button - Compact but prominent */}
+                                {/* Refresh Button - Enhanced */}
                                 <button
                                     onClick={handleRefresh}
                                     className="flex-1 sm:flex-none inline-flex items-center justify-center px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-medium text-gray-700 bg-white border-2 border-gray-200 rounded-lg shadow-md hover:shadow-lg hover:border-gray-300 hover:bg-gray-50 active:scale-98 transition-all duration-150 focus:outline-none focus:ring-3 focus:ring-gray-200 min-w-[120px]"
@@ -478,7 +492,7 @@ const Inventory = () => {
                                     Refresh
                                 </button>
 
-                                {/* Add Product Button - Prominent CTA */}
+                                {/* Add Product Button - Enhanced */}
                                 <button
                                     onClick={handleAddProduct}
                                     className="flex-1 sm:flex-none inline-flex items-center justify-center px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold text-white bg-green-600 rounded-lg shadow-md hover:shadow-lg hover:bg-green-700 active:scale-98 transition-all duration-150 focus:outline-none focus:ring-3 focus:ring-green-200 min-w-[140px]"
@@ -491,9 +505,9 @@ const Inventory = () => {
                             </div>
                         </div>
 
-                        {/* UPDATED Statistics Cards with Perfect Alignment */}
+                        {/* Statistics Cards with Perfect Alignment */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4">
-                            {/* Total Stock Card - Properly Aligned */}
+                            {/* Total Stock Card */}
                             <div className="bg-blue-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-blue-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-blue-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Total Stock
@@ -508,7 +522,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* In Stock Card - Properly Aligned */}
+                            {/* In Stock Card */}
                             <div className="bg-green-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-green-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-green-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     In Stock
@@ -523,7 +537,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Low Stock Card - Properly Aligned */}
+                            {/* Low Stock Card */}
                             <div className="bg-yellow-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-yellow-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-yellow-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Low Stock
@@ -538,7 +552,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Out of Stock Card - Properly Aligned */}
+                            {/* Out of Stock Card */}
                             <div className="bg-red-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-red-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-red-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Out of Stock
@@ -553,7 +567,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Inventory Value Card - Properly Aligned */}
+                            {/* Inventory Value Card */}
                             <div className="bg-purple-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between col-span-2 sm:col-span-1 border border-purple-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-purple-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Inventory Value
@@ -568,7 +582,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Total Sales Card - Properly Aligned */}
+                            {/* Total Sales Card */}
                             <div className="bg-indigo-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between col-span-2 sm:col-span-2 lg:col-span-1 border border-indigo-100 hover:shadow-lg transition-shadow duration-200">
                                 <div className="text-indigo-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Total Sales
@@ -586,11 +600,11 @@ const Inventory = () => {
                     </div>
                 </div>
 
-                {/* Desktop: FIXED Table Header/Content Alignment */}
+                {/* Desktop: Table Content */}
                 {products.length > 0 ? (
                     <div className="px-2 xs:px-4 sm:px-6 lg:px-8 py-3 xs:py-4 sm:py-6 flex-shrink-0">
                         <div className="bg-white rounded-lg shadow-md overflow-hidden" style={{ height: '50vh' }}>
-                            {/* Fixed Table Header with Consistent Column Widths */}
+                            {/* Fixed Table Header */}
                             <div className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                                 <table className="min-w-full table-fixed">
                                     <thead>
@@ -618,7 +632,7 @@ const Inventory = () => {
                                 </table>
                             </div>
 
-                            {/* Scrollable Table Body Container with Same Column Layout */}
+                            {/* Scrollable Table Body */}
                             <div className="overflow-y-auto" style={{ height: 'calc(50vh - 60px)' }}>
                                 <table className="min-w-full table-fixed">
                                     <tbody className="bg-white divide-y divide-gray-200">
@@ -660,17 +674,9 @@ const Inventory = () => {
                 )}
             </div>
 
-            {/* Mobile/Tablet Layout - Everything Scrollable with Explicit Overflow */}
-            <div
-                className="block lg:hidden min-h-screen bg-gray-50"
-                style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    WebkitOverflowScrolling: 'touch',
-                    paddingBottom:'80px',
-                }}
-            >
-                {/* Header Section - Mobile/Tablet (Scrollable) */}
+            {/* Mobile/Tablet Layout with Safe Area Support */}
+            <div className="block lg:hidden bg-gray-50 mobile-container">
+                {/* Header Section - Mobile/Tablet */}
                 <div className="bg-white border-b border-gray-200">
                     <div className="px-2 xs:px-4 sm:px-6 py-3 xs:py-4 sm:py-6">
                         {/* Header */}
@@ -707,9 +713,9 @@ const Inventory = () => {
                             </div>
                         </div>
 
-                        {/* UPDATED Statistics Cards - Mobile/Tablet with Enhanced Info Text */}
+                        {/* Statistics Cards - Mobile/Tablet */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 sm:gap-5">
-                            {/* Total Stock Card - Enhanced with detailed info */}
+                            {/* Total Stock Card */}
                             <div className="bg-blue-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-blue-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-blue-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Total Stock
@@ -727,7 +733,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* In Stock Card - Enhanced with detailed info */}
+                            {/* In Stock Card */}
                             <div className="bg-green-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-green-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-green-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     In Stock
@@ -745,7 +751,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Low Stock Card - Enhanced with detailed info */}
+                            {/* Low Stock Card */}
                             <div className="bg-yellow-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-yellow-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-yellow-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Low Stock
@@ -763,7 +769,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Out of Stock Card - Enhanced with detailed info */}
+                            {/* Out of Stock Card */}
                             <div className="bg-red-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between border border-red-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-red-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Out of Stock
@@ -781,7 +787,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Inventory Value Card - Enhanced with detailed info */}
+                            {/* Inventory Value Card */}
                             <div className="bg-purple-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between col-span-2 sm:col-span-1 border border-purple-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-purple-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Inventory Value
@@ -799,7 +805,7 @@ const Inventory = () => {
                                 </div>
                             </div>
 
-                            {/* Total Sales Card - Enhanced with detailed info */}
+                            {/* Total Sales Card */}
                             <div className="bg-indigo-50 p-3 xs:p-4 sm:p-5 rounded-xl min-w-0 min-h-[100px] xs:min-h-[110px] sm:min-h-[120px] flex flex-col justify-between col-span-2 sm:col-span-2 lg:col-span-1 border border-indigo-100 shadow-sm hover:shadow-md transition-shadow duration-200">
                                 <div className="text-indigo-800 text-xs font-semibold uppercase tracking-wider leading-tight mb-2">
                                     Total Sales
@@ -820,10 +826,10 @@ const Inventory = () => {
                     </div>
                 </div>
 
-                {/* Content Area - Mobile/Tablet (Scrollable) */}
+                {/* Content Area - Mobile/Tablet with Safe Area Bottom Padding */}
                 {products.length > 0 ? (
-                    <div className="px-2 xs:px-4 sm:px-6 py-3 xs:py-4 sm:py-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-4 pb-4">
+                    <div className="px-2 xs:px-4 sm:px-6 py-3 xs:py-4 sm:py-6 safe-bottom">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-4">
                             {products.map((product) => (
                                 <ProductCard
                                     key={product.id}
@@ -835,8 +841,8 @@ const Inventory = () => {
                         </div>
                     </div>
                 ) : (
-                    // Mobile Empty State
-                    <div className="flex items-center justify-center px-2 xs:px-4 sm:px-6 py-8">
+                    // Mobile Empty State with Safe Area Support
+                    <div className="flex items-center justify-center px-2 xs:px-4 sm:px-6 py-8 safe-bottom">
                         <div className="bg-white rounded-lg shadow-md p-6 xs:p-8 sm:p-12 max-w-md mx-auto">
                             <div className="text-center">
                                 <div className="text-4xl xs:text-5xl sm:text-6xl mb-3 xs:mb-4">📦</div>
@@ -866,7 +872,7 @@ const Inventory = () => {
                     onClose={handleFormClose}
                 />
             )}
-        </>
+        </div>
     );
 };
 

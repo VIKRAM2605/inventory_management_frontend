@@ -68,7 +68,7 @@ const Checkout = () => {
         }, 0);
 
         let discountAmount = 0;
-        
+
         if (discountType === 'percentage') {
             discountAmount = (subtotal * discountPercentage) / 100;
         } else {
@@ -132,7 +132,7 @@ const Checkout = () => {
 
     const handleDiscountTypeChange = (type) => {
         setDiscountType(type);
-        
+
         if (type === 'percentage') {
             setManualDiscountAmount(0);
         } else {
@@ -147,7 +147,7 @@ const Checkout = () => {
     const handleManualAmountChange = (value) => {
         const numValue = parseFloat(value) || 0;
         const maxDiscount = calculatedValues.subtotal;
-        
+
         if (numValue > maxDiscount) {
             setManualDiscountAmount(maxDiscount);
         }
@@ -223,7 +223,7 @@ const Checkout = () => {
     };
 
     return (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100" style={{ minHeight: '100vh' }}>
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100" style={{ minHeight: '100vh', paddingBottom: '50px' }}>
             {/* Alert Component */}
             <Alert
                 isOpen={alert.isOpen}
@@ -233,26 +233,26 @@ const Checkout = () => {
                 position="top"
                 duration={4000}
             />
-            
+
             {/* Main Scrollable Container - Force scroll */}
-            <div 
+            <div
                 className="w-full"
-                style={{ 
-                    height: '100vh', 
+                style={{
+                    height: '100vh',
                     overflowY: 'auto',
                     overflowX: 'hidden',
                     paddingBottom: '50px'
                 }}
             >
-                <div style={{ minHeight: '100%'}}>
+                <div style={{ minHeight: '100%' }}>
                     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
-                        
+
                         {/* Content Grid */}
                         <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-4 lg:gap-6">
-                            
+
                             {/* Left Column - Form Section */}
                             <div className="flex flex-col space-y-4 sm:space-y-5">
-                                
+
                                 {/* Customer Information */}
                                 <div className="bg-white rounded-lg shadow-md p-4 sm:p-5">
                                     <div className="flex items-center mb-4">
@@ -348,11 +348,10 @@ const Checkout = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => handleDiscountTypeChange('percentage')}
-                                                    className={`p-2.5 sm:p-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                                                        discountType === 'percentage'
+                                                    className={`p-2.5 sm:p-3 rounded-lg border-2 text-sm font-medium transition-all ${discountType === 'percentage'
                                                             ? 'border-blue-500 bg-blue-50 text-blue-700'
                                                             : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <div className="flex items-center justify-center">
                                                         <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -364,11 +363,10 @@ const Checkout = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => handleDiscountTypeChange('amount')}
-                                                    className={`p-2.5 sm:p-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                                                        discountType === 'amount'
+                                                    className={`p-2.5 sm:p-3 rounded-lg border-2 text-sm font-medium transition-all ${discountType === 'amount'
                                                             ? 'border-green-500 bg-green-50 text-green-700'
                                                             : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <div className="flex items-center justify-center">
                                                         <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -471,7 +469,7 @@ const Checkout = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    🛒 
+                                                    🛒
                                                     <span className="ml-1 sm:ml-2">
                                                         <span className="hidden sm:inline">Place Order • </span>
                                                         ₹{calculatedValues.total.toFixed(0)}
@@ -486,7 +484,7 @@ const Checkout = () => {
 
                             {/* Right Column - Order Summary - Fixed Height */}
                             <div className="xl:order-last order-first">
-                                <div 
+                                <div
                                     className="bg-white rounded-lg shadow-md xl:sticky xl:top-4"
                                     style={{ maxHeight: '85vh' }}
                                 >
@@ -508,7 +506,7 @@ const Checkout = () => {
                                     </div>
 
                                     {/* Scrollable Cart Items */}
-                                    <div 
+                                    <div
                                         className="overflow-y-auto"
                                         style={{ maxHeight: 'calc(85vh - 160px)' }}
                                     >
@@ -569,8 +567,8 @@ const Checkout = () => {
                                             {calculatedValues.discountAmount > 0 && (
                                                 <div className="flex justify-between text-green-600">
                                                     <span className="font-medium text-sm">
-                                                        Discount {discountType === 'percentage' 
-                                                            ? `(${discountPercentage}%)` 
+                                                        Discount {discountType === 'percentage'
+                                                            ? `(${discountPercentage}%)`
                                                             : `(₹${manualDiscountAmount.toFixed(0)})`
                                                         }
                                                     </span>
