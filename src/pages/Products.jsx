@@ -243,7 +243,7 @@ const Products = () => {
                                             title={`Checkout ${totalCartItems} items worth ₹${totalCartValue.toFixed(2)}`}
                                         >
                                             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0L17 18m-8 0h8m-8 0V9a3 3 0 016 0v9" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0L17 18m-8 0h8m-8 0V9a3 3 0 616 0v9" />
                                             </svg>
                                             <span className="hidden sm:inline">Checkout</span>
                                             <span className="sm:hidden">Checkout</span>
@@ -321,7 +321,7 @@ const Products = () => {
                 {/* Desktop: Scrollable Products Section */}
                 <div className="flex-1 overflow-y-auto" style={{ minHeight: 0 }}>
                     <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                        {/* 🔥 FIXED: Proper Desktop Grid Layout */}
+                        {/* Fixed Desktop Grid Layout */}
                         <div className="grid gap-6 w-full" style={{
                             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                             justifyItems: 'stretch',
@@ -396,10 +396,10 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Mobile/Tablet Layout with Safe Area Support */}
-            <div className="block lg:hidden bg-gray-50 mobile-container mobile-bottom-spacing ensure-scroll-end">
-                {/* Header Section - Mobile/Tablet */}
-                <div className="bg-white border-b border-gray-200">
+            {/* 🔥 FIXED: Mobile/Tablet Layout with FIXED Header + Scrollable Content */}
+            <div className="block lg:hidden bg-gray-50 mobile-container mobile-bottom-spacing ensure-scroll-end" style={{ height: '100vh' }}>
+                {/* 🔥 FIXED: Mobile Fixed Header */}
+                <div className="bg-white border-b border-gray-200 flex-shrink-0">
                     <div className="px-4 py-4 sm:py-5">
                         {/* Header */}
                         <div className="flex flex-col space-y-4">
@@ -462,7 +462,7 @@ const Products = () => {
                                             className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all duration-200 flex items-center justify-center space-x-2 text-sm font-medium w-full"
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0L17 18m-8 0h8m-8 0V9a3 3 0 016 0v9" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0L17 18m-8 0h8m-8 0V9a3 3 0 616 0v9" />
                                             </svg>
                                             <span>Checkout</span>
                                             <span className="bg-white text-green-600 px-2 py-1 rounded-full text-xs font-bold min-w-6 text-center">
@@ -533,9 +533,16 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* Mobile Products Content with Safe Area Bottom Padding */}
-                <div className="px-4 py-4 mobile-content-spacing">
-                    {/* 🔥 FIXED: Mobile Grid Layout */}
+                {/* 🔥 FIXED: Mobile Scrollable Content Only */}
+                <div 
+                    className="flex-1 overflow-y-auto px-4 py-4 mobile-content-spacing"
+                    style={{ 
+                        minHeight: 0,
+                        WebkitOverflowScrolling: 'touch',
+                        overflowY: 'auto'
+                    }}
+                >
+                    {/* Fixed Mobile Grid Layout */}
                     <div className="grid gap-4 w-full mobile-content-spacing" style={{
                         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                         justifyItems: 'stretch',
