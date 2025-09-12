@@ -17,8 +17,6 @@ html {
 }
 
 /* Make body/root container scrollable with NATIVE behavior */
-body,
-#root,
 .app-container {
   height: 100vh;
   height: 100dvh;

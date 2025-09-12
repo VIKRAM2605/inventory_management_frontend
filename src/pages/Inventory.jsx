@@ -320,7 +320,6 @@ const Inventory = () => {
         try {
             setLoading(true);
             setError(null);
-            showAlert('info', 'Loading inventory...');
 
             const [productsResponse] = await Promise.all([
                 productsAPI.getAll(),
@@ -328,12 +327,6 @@ const Inventory = () => {
             ]);
 
             setProducts(productsResponse.data || []);
-
-            if ((productsResponse.data || []).length === 0) {
-                showAlert('info', 'No products found. Add your first product to get started!');
-            } else {
-                showAlert('success', `Successfully loaded ${(productsResponse.data || []).length} products`);
-            }
         } catch (error) {
             console.error('Error fetching products:', error);
             const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
@@ -384,17 +377,14 @@ const Inventory = () => {
     const handleFormClose = useCallback(() => {
         setShowForm(false);
         setEditingProduct(null);
-        showAlert('info', 'Form closed. Refreshing inventory...');
         fetchProducts(); // Refresh the list after form closes
     }, [fetchProducts, showAlert]);
 
     const handleRetry = useCallback(() => {
-        showAlert('info', 'Retrying to load inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
     const handleRefresh = useCallback(() => {
-        showAlert('info', 'Refreshing inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
