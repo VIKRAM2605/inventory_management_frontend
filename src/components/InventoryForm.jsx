@@ -157,7 +157,7 @@ const InventoryForm = ({ product, onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 xs:p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 xs:p-8">
             {/* Alert Component */}
             <Alert
                 isOpen={alert.isOpen}
@@ -169,7 +169,7 @@ const InventoryForm = ({ product, onClose }) => {
             />
             
             {/* RESPONSIVE MODAL CONTAINER */}
-            <div className="bg-white rounded-lg w-full max-w-xs xs:max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl max-h-[95vh] xs:max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white rounded-lg w-full max-w-xs xs:max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl max-h-[95vh] xs:max-h-[85vh] overflow-hidden flex flex-col">
                 
                 {/* STICKY HEADER */}
                 <div className="flex-shrink-0 flex justify-between items-center p-3 xs:p-4 sm:p-6 border-b border-gray-200 bg-white">

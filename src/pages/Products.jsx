@@ -74,7 +74,6 @@ const Products = () => {
             try {
                 setLoading(true);
                 setError(null);
-                showAlert('info', 'Loading products...');
 
                 const response = await productsAPI.getAll();
                 const fetchedProducts = response.data || [];

@@ -240,10 +240,11 @@ const Checkout = () => {
                 style={{ 
                     height: '100vh', 
                     overflowY: 'auto',
-                    overflowX: 'hidden'
+                    overflowX: 'hidden',
+                    paddingBottom: '50px'
                 }}
             >
-                <div style={{ minHeight: '100%', paddingBottom: '50px' }}>
+                <div style={{ minHeight: '100%'}}>
                     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
                         
                         {/* Content Grid */}
