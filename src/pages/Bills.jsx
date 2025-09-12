@@ -44,15 +44,11 @@ const Bills = () => {
         try {
             setLoading(true);
             setError(null);
-            showAlert('info', 'Loading bills...');
-
             const response = await billsAPI.getAll();
             setBills(response.data);
 
             if (response.data.length === 0) {
                 showAlert('info', 'No bills found in the system');
-            } else {
-                showAlert('success', `Successfully loaded ${response.data.length} bills`);
             }
         } catch (error) {
             console.error('Error fetching bills:', error);
@@ -71,12 +67,10 @@ const Bills = () => {
 
     const handleViewBill = useCallback((bill) => {
         setSelectedBill(bill);
-        showAlert('info', `Opening invoice for ${toTitleCase(bill.customer_name)}`);
     }, []);
 
     const handleCloseBill = useCallback(() => {
         setSelectedBill(null);
-        showAlert('info', 'Invoice closed');
     }, []);
 
     const handleRetry = () => {
@@ -326,7 +320,7 @@ const Bills = () => {
                 </div>
 
                 <div className="block lg:hidden">
-                    <div className='space-y-4 max-h-[70vh] overflow-y-auto pr-1'>
+                    <div className='space-y-4 max-h-[58vh] overflow-y-auto pr-1'>
                     {bills.length > 0 ? (
                         bills.map((bill) => (
                             <div key={bill.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all">

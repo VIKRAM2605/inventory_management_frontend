@@ -320,20 +320,12 @@ const Inventory = () => {
         try {
             setLoading(true);
             setError(null);
-            showAlert('info', 'Loading inventory...');
-
             const [productsResponse] = await Promise.all([
                 productsAPI.getAll(),
                 fetchSalesData() // Fetch both simultaneously
             ]);
 
             setProducts(productsResponse.data || []);
-
-            if ((productsResponse.data || []).length === 0) {
-                showAlert('info', 'No products found. Add your first product to get started!');
-            } else {
-                showAlert('success', `Successfully loaded ${(productsResponse.data || []).length} products`);
-            }
         } catch (error) {
             console.error('Error fetching products:', error);
             const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
@@ -353,13 +345,11 @@ const Inventory = () => {
     const handleAddProduct = useCallback(() => {
         setEditingProduct(null);
         setShowForm(true);
-        showAlert('info', 'Opening form to add new product');
     }, [showAlert]);
 
     const handleEditProduct = useCallback((product) => {
         setEditingProduct(product);
         setShowForm(true);
-        showAlert('info', `Editing product: ${toTitleCase(product.name)}`);
     }, [showAlert]);
 
     const handleDeleteProduct = useCallback(async (productId, productName) => {
@@ -369,7 +359,6 @@ const Inventory = () => {
             try {
                 showAlert('warning', 'Deleting product...');
                 await inventoryAPI.delete(productId);
-                showAlert('success', `Product "${toTitleCase(productName)}" deleted successfully`);
                 await fetchProducts(); // Refresh the list
             } catch (error) {
                 console.error('Error deleting product:', error);
@@ -384,17 +373,14 @@ const Inventory = () => {
     const handleFormClose = useCallback(() => {
         setShowForm(false);
         setEditingProduct(null);
-        showAlert('info', 'Form closed. Refreshing inventory...');
         fetchProducts(); // Refresh the list after form closes
     }, [fetchProducts, showAlert]);
 
     const handleRetry = useCallback(() => {
-        showAlert('info', 'Retrying to load inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
     const handleRefresh = useCallback(() => {
-        showAlert('info', 'Refreshing inventory...');
         fetchProducts();
     }, [fetchProducts, showAlert]);
 
@@ -680,7 +666,8 @@ const Inventory = () => {
                 style={{
                     overflow: 'auto',
                     height: '100vh',
-                    WebkitOverflowScrolling: 'touch'
+                    WebkitOverflowScrolling: 'touch',
+                    paddingBottom:'80px',
                 }}
             >
                 {/* Header Section - Mobile/Tablet (Scrollable) */}

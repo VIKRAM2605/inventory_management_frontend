@@ -48,9 +48,6 @@ const InventoryForm = ({ product, onClose }) => {
                 sku: product.sku || ''
             });
             setImagePreview(product.image_url);
-            showAlert('info', 'Product loaded for editing');
-        } else {
-            showAlert('info', 'Ready to add new product');
         }
     }, [product]);
 
@@ -156,7 +153,6 @@ const InventoryForm = ({ product, onClose }) => {
     };
 
     const handleClose = () => {
-        showAlert('info', 'Closing form...');
         setTimeout(onClose, 1000);
     };
 

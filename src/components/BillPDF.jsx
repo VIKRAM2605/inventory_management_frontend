@@ -67,15 +67,12 @@ const BillPDF = ({ bill, onClose }) => {
 
   const generateFormattedPDF = async () => {
     try {
-      showAlert('info', 'Starting PDF generation...');
       console.log('Starting PDF generation...');
       const element = document.getElementById('bill-content');
 
       if (!element) {
         throw new Error('Bill content element not found');
       }
-
-      showAlert('info', 'Capturing invoice content...');
       console.log('Capturing element as canvas...');
       const canvas = await html2canvas(element, {
         scale: 2,
@@ -83,8 +80,6 @@ const BillPDF = ({ bill, onClose }) => {
         allowTaint: true,
         backgroundColor: '#ffffff'
       });
-
-      showAlert('info', 'Converting to PDF format...');
       console.log('Canvas created, generating PDF...');
       const imgData = canvas.toDataURL('image/png');
 
@@ -108,9 +103,7 @@ const BillPDF = ({ bill, onClose }) => {
       console.log('Saving PDF...');
       const fileName = `invoice-${bill?.id?.substring(0, 8) || 'unknown'}.pdf`;
       doc.save(fileName);
-      
-      showAlert('success', `PDF downloaded successfully as ${fileName}`);
-      console.log('PDF generated successfully');
+            console.log('PDF generated successfully');
     } catch (error) {
       console.error('Detailed PDF generation error:', {
         message: error.message,
@@ -123,7 +116,6 @@ const BillPDF = ({ bill, onClose }) => {
 
   const printBill = () => {
     try {
-      showAlert('info', 'Preparing invoice for printing...');
       const printContent = document.getElementById('bill-content');
       if (!printContent) {
         showAlert('error', 'Invoice content not found for printing');

@@ -128,10 +128,6 @@ const Checkout = () => {
         // Limit to 10 digits
         const limitedDigits = digitsOnly.slice(0, 10);
         setCustomerPhone(limitedDigits);
-        
-        if (limitedDigits.length === 10) {
-            showAlert('success', 'Phone number entered successfully');
-        }
     };
 
     const handleDiscountTypeChange = (type) => {
@@ -139,20 +135,13 @@ const Checkout = () => {
         
         if (type === 'percentage') {
             setManualDiscountAmount(0);
-            showAlert('info', 'Switched to percentage discount');
         } else {
             setDiscountPercentage(0);
-            showAlert('info', 'Switched to manual amount discount');
         }
     };
 
     const handlePercentageChange = (value) => {
         setDiscountPercentage(value);
-        if (value > 0) {
-            showAlert('info', `Discount of ${value}% applied (₹${((calculatedValues.subtotal * value) / 100).toFixed(2)} off)`);
-        } else {
-            showAlert('info', 'Percentage discount removed');
-        }
     };
 
     const handleManualAmountChange = (value) => {
@@ -161,14 +150,6 @@ const Checkout = () => {
         
         if (numValue > maxDiscount) {
             setManualDiscountAmount(maxDiscount);
-            showAlert('warning', `Discount amount cannot exceed subtotal (₹${maxDiscount.toFixed(2)})`);
-        } else {
-            setManualDiscountAmount(numValue);
-            if (numValue > 0) {
-                showAlert('info', `Manual discount of ₹${numValue.toFixed(2)} applied`);
-            } else {
-                showAlert('info', 'Manual discount removed');
-            }
         }
     };
 
@@ -222,7 +203,6 @@ const Checkout = () => {
             await billsAPI.create(billData);
             clearCart(); // Clear Zustand cart
             showAlert('success', `🎉 Order placed successfully for ${toTitleCase(customerName)}!`);
-            
             setTimeout(() => {
                 navigate('/', { replace: true });
             }, 2000);
@@ -263,7 +243,7 @@ const Checkout = () => {
                     overflowX: 'hidden'
                 }}
             >
-                <div style={{ minHeight: '100%', paddingBottom: '20px' }}>
+                <div style={{ minHeight: '100%', paddingBottom: '50px' }}>
                     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
                         
                         {/* Content Grid */}

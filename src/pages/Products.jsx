@@ -91,12 +91,6 @@ const Products = () => {
                 console.log('Fetched products:', productsWithNumbers.length);
                 setProducts(productsWithNumbers);
                 setProductsInStore(productsWithNumbers);
-
-                if (productsWithNumbers.length === 0) {
-                    showAlert('info', 'No products available in the catalog');
-                } else {
-                    showAlert('success', `Successfully loaded ${productsWithNumbers.length} products`);
-                }
             } catch (error) {
                 console.error('Error fetching products:', error);
                 const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
@@ -133,23 +127,17 @@ const Products = () => {
             showAlert('info', 'Cart is already empty');
             return;
         }
-
         clearCart();
-        showAlert('success', `Cleared ${totalCartItems} items from cart`);
     };
 
     const handleClearSearch = () => {
         setSearchTerm('');
-        showAlert('info', 'Search cleared - showing all products');
     };
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
         if (category) {
             const categoryProducts = products.filter(p => p.category === category);
-            showAlert('info', `Filtered by ${toTitleCase(category)} - ${categoryProducts.length} products found`);
-        } else {
-            showAlert('info', `Showing all categories - ${products.length} products`);
         }
     };
 
@@ -396,7 +384,7 @@ const Products = () => {
 
             {/* Scrollable Products Section */}
             <div
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto pb-20"
                 style={{ minHeight: 0 }}
             >
                 <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
