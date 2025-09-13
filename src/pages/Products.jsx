@@ -155,7 +155,7 @@ const Products = () => {
         <>
             {/* ERROR PORTAL - RENDERS OUTSIDE COMPONENT TREE */}
             <ErrorPortal isVisible={!!error}>
-                <div 
+                <div
                     className="bg-white border border-red-400 text-red-700 px-6 py-6 rounded-xl shadow-2xl max-w-md w-full mx-4"
                     style={{
                         maxWidth: '500px',
@@ -336,7 +336,7 @@ const Products = () => {
                                     </div>
                                 ))}
                             </div>
-                            
+
                             {filteredProducts.length === 0 && (
                                 <div className="text-center py-12">
                                     <div className="text-6xl mb-4">📦</div>
@@ -465,18 +465,13 @@ const Products = () => {
 
                     {/* 🔧 MOBILE PRODUCTS GRID WITH SAFE AREA SUPPORT */}
                     <div className="bg-gray-50 px-4 py-6 mobile-content-container">
-                        <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mobile-products-grid">
+                        <div className="mobile-products-grid">
                             {filteredProducts.map(product => (
-                                <div 
-                                    key={product.id} 
-                                    className="w-full max-w-sm"
-                                    style={{ maxWidth: '340px', minWidth: '280px' }}
-                                >
+                                <div key={product.id}>
                                     <ProductCard product={product} />
                                 </div>
                             ))}
                         </div>
-                        
                         {filteredProducts.length === 0 && (
                             <div className="text-center py-12 ios-safe-bottom">
                                 <div className="text-4xl mb-4">📦</div>

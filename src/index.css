@@ -9,7 +9,7 @@
 }
 
 /* =======================================
-   NAVBAR LAYOUT FIXES
+   NAVBAR LAYOUT FIXES & MOBILE MENU FIX
    ======================================= */
 /* Navbar positioning */
 .navbar, nav, [class*="nav"] {
@@ -19,6 +19,35 @@
   right: 0;
   z-index: 1000;
   height: var(--navbar-height);
+}
+
+/* 🔧 NAVBAR MOBILE MENU BACKGROUND FIX */
+nav {
+  background-color: rgb(22 101 52) !important; /* green-800 */
+}
+
+nav > div {
+  background-color: rgb(22 101 52) !important; /* green-800 */
+}
+
+/* Mobile menu dropdown specific background */
+@media (max-width: 767px) {
+  nav .mobile-menu,
+  nav .mobile-nav,
+  nav [class*="mobile"],
+  nav div[class*="transition-all"] {
+    background-color: rgb(22 101 52) !important; /* green-800 */
+  }
+  
+  /* Ensure hamburger menu background is consistent */
+  nav div:has(.grid) {
+    background-color: rgb(22 101 52) !important; /* green-800 */
+  }
+  
+  /* Target the mobile menu container specifically */
+  nav > div > div:last-child {
+    background-color: rgb(22 101 52) !important; /* green-800 */
+  }
 }
 
 /* Main content spacing to account for fixed navbar */
@@ -65,7 +94,7 @@ body.error-modal-active .header {
 }
 
 /* =======================================
-   GLOBAL LAYOUT - HTML OVERFLOW HIDDEN
+   GLOBAL LAYOUT - HTML OVERFLOW CONTROL
    ======================================= */
 html {
   margin: 0;
@@ -115,13 +144,14 @@ body {
 }
 
 /* =======================================
-   MOBILE OPTIMIZATIONS WITH SAFE AREA
+   MOBILE OPTIMIZATIONS WITH ENHANCED SAFE AREA
    ======================================= */
 @media (max-width: 1023px) {
   /* Mobile: app-container handles all scrolling */
   .app-container {
     height: 100vh;
     height: 100dvh;
+    height: 100svh; /* Small viewport height for mobile browsers */
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior-y: auto;
@@ -134,23 +164,71 @@ body {
     z-index: 1000 !important;
   }
 
+  /* 🔧 ENHANCED MOBILE CONTENT SPACING FOR BROWSER UI */
+  .mobile-content-container {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px) !important;
+    min-height: calc(100vh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    min-height: calc(100svh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+  }
+  
+  /* 🔧 MOBILE PRODUCTS GRID - PERFECT CENTERING */
+  .mobile-products-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 16px !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 80px) !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 🔧 MOBILE PRODUCT CARDS - OVERRIDE ALL WIDTH CONSTRAINTS */
+  .mobile-products-grid > div {
+    flex: 0 0 auto !important;
+    width: calc(50% - 8px) !important; /* Two cards per row with gap */
+    min-width: 280px !important;
+    max-width: 340px !important;
+    margin: 0 !important;
+  }
+  
+  /* 🔧 SINGLE COLUMN ON VERY SMALL SCREENS */
+  @media (max-width: 640px) {
+    .mobile-products-grid > div {
+      width: 100% !important;
+      max-width: 340px !important;
+    }
+  }
+  
+  .mobile-products-grid > *:last-child {
+    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 40px) !important;
+  }
+  
+  .ios-safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 60px) !important;
+  }
+
   /* 🔧 BILLS-SPECIFIC MOBILE SAFE AREA CLASSES */
   .mobile-bills-container {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 80px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px) !important;
     min-height: calc(100vh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    min-height: calc(100svh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
   }
   
   .mobile-bills-grid {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 80px) !important;
   }
   
   .mobile-last-bill-card {
-    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 30px) !important;
+    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 50px) !important;
   }
   
   .mobile-empty-state {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
-    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 25px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 80px) !important;
+    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 40px) !important;
   }
 
   /* 🔧 BILL PDF MODAL SAFE AREA CLASSES */
@@ -162,38 +240,20 @@ body {
   }
   
   .mobile-bill-modal {
-    margin-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
+    margin-bottom: calc(env(safe-area-inset-bottom, 10px) + 30px);
   }
   
   .mobile-bill-content {
-    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 30px);
   }
   
   .mobile-bill-actions {
-    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 12px) !important;
-  }
-
-  /* 🔧 GENERAL MOBILE CONTENT WITH SAFE AREA */
-  .mobile-content-container {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 60px);
-    min-height: calc(100vh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
-  }
-  
-  .mobile-products-grid {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
-  }
-  
-  .mobile-products-grid > *:last-child {
-    margin-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
-  }
-  
-  .ios-safe-bottom {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 30px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px) !important;
   }
 }
 
 /* =======================================
-   RESPONSIVE NAVBAR
+   RESPONSIVE NAVBAR HEIGHT
    ======================================= */
 @media (max-width: 768px) {
   :root {
@@ -202,44 +262,44 @@ body {
 }
 
 /* =======================================
-   ENHANCED SAFE AREA SUPPORT
+   ENHANCED SAFE AREA SUPPORT WITH FALLBACKS
    ======================================= */
 
-/* Base safe area support */
+/* Base safe area support with env() */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom {
     padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
   }
   
   .mobile-bottom-spacing {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 120px);
   }
   
   @media (max-width: 1023px) {
     .mobile-content-container {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 60px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important;
     }
     
     .mobile-products-grid {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px) !important;
     }
     
     /* Bills-specific safe area with env() support */
     .mobile-bills-container {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important;
     }
     
     .mobile-bills-grid {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px) !important;
     }
     
     .mobile-last-bill-card {
-      margin-bottom: calc(env(safe-area-inset-bottom) + 30px) !important;
+      margin-bottom: calc(env(safe-area-inset-bottom) + 50px) !important;
     }
     
     .mobile-empty-state {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
-      margin-bottom: calc(env(safe-area-inset-bottom) + 25px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px) !important;
+      margin-bottom: calc(env(safe-area-inset-bottom) + 40px) !important;
     }
 
     /* 🔧 BILL PDF MODAL WITH ENV() SUPPORT */
@@ -251,84 +311,127 @@ body {
     }
     
     .mobile-bill-modal {
-      margin-bottom: calc(env(safe-area-inset-bottom) + 20px);
+      margin-bottom: calc(env(safe-area-inset-bottom) + 30px);
     }
     
     .mobile-bill-content {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 30px);
     }
     
     .mobile-bill-actions {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 20px) !important;
     }
     
     .ios-safe-bottom {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 30px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
     }
   }
 }
 
+/* Fallback for browsers that don't support env() */
 @supports not (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom {
-    padding-bottom: 40px;
+    padding-bottom: 60px;
   }
   
   .mobile-bottom-spacing {
-    padding-bottom: 100px;
+    padding-bottom: 140px;
   }
   
   @media (max-width: 1023px) {
     .mobile-content-container {
-      padding-bottom: 80px;
+      padding-bottom: 140px !important;
     }
     
     .mobile-products-grid {
-      padding-bottom: 60px;
+      padding-bottom: 100px !important;
     }
     
     /* Bills-specific fallback safe area */
     .mobile-bills-container {
-      padding-bottom: 100px;
+      padding-bottom: 140px !important;
     }
     
     .mobile-bills-grid {
-      padding-bottom: 60px;
+      padding-bottom: 100px !important;
     }
     
     .mobile-last-bill-card {
-      margin-bottom: 45px !important;
+      margin-bottom: 70px !important;
     }
     
     .mobile-empty-state {
-      padding-bottom: 60px;
-      margin-bottom: 40px;
+      padding-bottom: 100px !important;
+      margin-bottom: 60px !important;
     }
 
     /* 🔧 BILL PDF MODAL FALLBACK SAFE AREA */
     .bill-pdf-modal {
-      padding: 26px !important;
+      padding: 36px !important;
     }
     
     .mobile-bill-modal {
-      margin-bottom: 30px;
+      margin-bottom: 50px;
     }
     
     .mobile-bill-content {
-      padding-bottom: 30px;
+      padding-bottom: 50px;
     }
     
     .mobile-bill-actions {
-      padding-bottom: 22px !important;
+      padding-bottom: 32px !important;
     }
     
     .ios-safe-bottom {
-      padding-bottom: 50px;
+      padding-bottom: 80px !important;
     }
   }
 }
 
 /* =======================================
-   CARD CENTERING
+   DYNAMIC VIEWPORT HEIGHT SUPPORT
+   ======================================= */
+@supports (height: 100dvh) {
+  .app-container {
+    height: 100dvh;
+  }
+  
+  @media (max-width: 1023px) {
+    .app-container {
+      height: 100dvh;
+      min-height: 100dvh;
+    }
+    
+    .mobile-content-container {
+      min-height: calc(100dvh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    }
+    
+    .mobile-bills-container {
+      min-height: calc(100dvh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    }
+  }
+}
+
+/* Small viewport height for mobile browsers with collapsing UI */
+@supports (height: 100svh) {
+  @media (max-width: 1023px) {
+    .app-container {
+      height: 100svh;
+      min-height: 100svh;
+    }
+    
+    .mobile-content-container {
+      min-height: calc(100svh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    }
+    
+    .mobile-bills-container {
+      min-height: calc(100svh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+    }
+  }
+}
+
+/* =======================================
+   CARD CENTERING - DESKTOP & FALLBACK
    ======================================= */
 .cards-container {
   display: flex !important;
@@ -339,24 +442,39 @@ body {
   width: 100% !important;
   max-width: 1200px !important;
   margin: 0 auto !important;
+  padding: 0 clamp(16px, 5vw, 32px) !important;
+  box-sizing: border-box !important;
 }
 
 .card-item {
+  flex: 0 0 auto !important;
   width: 100% !important;
   max-width: 340px !important;
   min-width: 280px !important;
-  flex-shrink: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cards-container {
+    padding: 0 16px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .cards-container {
+    padding: 0 !important;
+  }
 }
 
 /* =======================================
    UTILITY CLASSES
    ======================================= */
 .mobile-content-spacing {
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 .ensure-scroll-end {
-  scroll-padding-bottom: 40px;
+  scroll-padding-bottom: 60px;
 }
 
 /* =======================================
