@@ -173,7 +173,10 @@ const Products = () => {
     }
 
     return (
-        <div className="app-container">
+        <div className="app-container" style={{ 
+            overscrollBehaviorY: 'contain',
+            WebkitOverflowScrolling: 'touch'
+        }}>
             {/* Desktop Layout - Fixed Header with Scrollable Content */}
             <div className="hidden lg:flex lg:flex-col lg:bg-gray-50" style={{ height: '100vh' }}>
                 {/* Fixed Header Section - Desktop Only */}
@@ -319,94 +322,112 @@ const Products = () => {
                 </div>
 
                 {/* Desktop: Scrollable Products Section */}
-                <div className="flex-1 overflow-y-auto" style={{ minHeight: 0 }}>
-                    <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                        {/* Fixed Desktop Grid Layout */}
-                        <div className="grid gap-6 w-full" style={{
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                            justifyItems: 'stretch',
-                            alignItems: 'start'
-                        }}>
-                            {filteredProducts.map(product => (
-                                <div key={product.id} className="w-full">
-                                    <ProductCard product={product} />
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* No Products Found */}
-                        {filteredProducts.length === 0 && (
-                            <div className="text-center py-12 px-4">
-                                <div className="text-4xl sm:text-6xl mb-4">📦</div>
-                                <p className="text-gray-500 text-base sm:text-lg mb-4">
-                                    {products.length === 0
-                                        ? 'No products available'
-                                        : searchTerm || selectedCategory
-                                            ? 'No matching products found'
-                                            : 'No products to display'
-                                    }
-                                </p>
-
-                                {searchTerm && (
-                                    <div className="space-y-3">
-                                        <p className="text-gray-400 text-sm">
-                                            Try different keywords for "{searchTerm}"
-                                        </p>
-                                        <button
-                                            onClick={handleClearSearch}
-                                            className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-                                        >
-                                            Clear Search
-                                        </button>
+                <div className="flex-1" style={{ 
+                    minHeight: 0, 
+                    overflow: 'visible' 
+                }}>
+                    <div 
+                        className="h-full"
+                        style={{ 
+                            overflowY: 'auto',
+                            overflowX: 'hidden',
+                            WebkitOverflowScrolling: 'touch'
+                        }}
+                    >
+                        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                            {/* Fixed Desktop Grid Layout */}
+                            <div className="grid gap-6 w-full" style={{
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                                justifyItems: 'stretch',
+                                alignItems: 'start'
+                            }}>
+                                {filteredProducts.map(product => (
+                                    <div key={product.id} className="w-full">
+                                        <ProductCard product={product} />
                                     </div>
-                                )}
-
-                                {selectedCategory && !searchTerm && (
-                                    <div className="space-y-3">
-                                        <p className="text-gray-400 text-sm">
-                                            No products in {toTitleCase(selectedCategory)}
-                                        </p>
-                                        <button
-                                            onClick={() => handleCategoryChange('')}
-                                            className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-                                        >
-                                            Show All Categories
-                                        </button>
-                                    </div>
-                                )}
-
-                                {!searchTerm && !selectedCategory && products.length === 0 && (
-                                    <div className="space-y-3">
-                                        <p className="text-gray-400 text-sm">
-                                            Contact admin to add products
-                                        </p>
-                                        <button
-                                            onClick={() => {
-                                                window.location.reload();
-                                            }}
-                                            className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-                                        >
-                                            Check for Products
-                                        </button>
-                                    </div>
-                                )}
+                                ))}
                             </div>
-                        )}
+
+                            {/* No Products Found */}
+                            {filteredProducts.length === 0 && (
+                                <div className="text-center py-12 px-4">
+                                    <div className="text-4xl sm:text-6xl mb-4">📦</div>
+                                    <p className="text-gray-500 text-base sm:text-lg mb-4">
+                                        {products.length === 0
+                                            ? 'No products available'
+                                            : searchTerm || selectedCategory
+                                                ? 'No matching products found'
+                                                : 'No products to display'
+                                        }
+                                    </p>
+
+                                    {searchTerm && (
+                                        <div className="space-y-3">
+                                            <p className="text-gray-400 text-sm">
+                                                Try different keywords for "{searchTerm}"
+                                            </p>
+                                            <button
+                                                onClick={handleClearSearch}
+                                                className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                                            >
+                                                Clear Search
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {selectedCategory && !searchTerm && (
+                                        <div className="space-y-3">
+                                            <p className="text-gray-400 text-sm">
+                                                No products in {toTitleCase(selectedCategory)}
+                                            </p>
+                                            <button
+                                                onClick={() => handleCategoryChange('')}
+                                                className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                                            >
+                                                Show All Categories
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {!searchTerm && !selectedCategory && products.length === 0 && (
+                                        <div className="space-y-3">
+                                            <p className="text-gray-400 text-sm">
+                                                Contact admin to add products
+                                            </p>
+                                            <button
+                                                onClick={() => {
+                                                    window.location.reload();
+                                                }}
+                                                className="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                                            >
+                                                Check for Products
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile/Tablet Layout - FIXED HEADER + CENTERED CARDS */}
-            <div className="block lg:hidden bg-gray-50">
-                {/* 🎯 FIXED MOBILE HEADER - Stays at top */}
+            {/* 🎯 MOBILE LAYOUT - STICKY HEADER + CENTERED CARDS + PULL-TO-REFRESH */}
+            <div 
+                className="block lg:hidden"
+                style={{ 
+                    height: '100vh',
+                    overflow: 'visible',
+                    overscrollBehaviorY: 'contain'
+                }}
+            >
+                {/* 🎯 STICKY MOBILE HEADER */}
                 <div 
-                    className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50"
+                    className="bg-white border-b border-gray-200"
                     style={{
-                        position: 'fixed',
+                        position: 'sticky',
                         top: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 1000
+                        zIndex: 1000,
+                        overflow: 'visible'
                     }}
                 >
                     <div className="px-4 py-4">
@@ -539,23 +560,25 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* 🎯 MOBILE SCROLLABLE CONTENT - Starts below fixed header */}
+                {/* 🎯 MOBILE SCROLLABLE CONTENT WITH CENTERED CARDS */}
                 <div 
-                    className="pt-80 pb-6 min-h-screen overflow-y-auto"
-                    style={{
-                        paddingTop: totalCartItems > 0 ? '320px' : '240px', // Dynamic padding based on header height
-                        minHeight: '100vh',
-                        WebkitOverflowScrolling: 'touch'
+                    className="bg-gray-50"
+                    style={{ 
+                        minHeight: 'calc(100vh - 280px)',
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        WebkitOverflowScrolling: 'touch',
+                        overscrollBehaviorY: 'contain'
                     }}
                 >
-                    <div className="px-4">
-                        {/* 🎯 CENTERED CARDS LAYOUT FOR MOBILE */}
+                    <div className="px-4 py-6">
+                        {/* 🎯 PERFECTLY CENTERED CARDS LAYOUT FOR MOBILE */}
                         <div 
-                            className="flex flex-wrap justify-center gap-4 w-full max-w-6xl mx-auto"
                             style={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
                                 justifyContent: 'center',
+                                alignItems: 'flex-start',
                                 gap: '16px',
                                 width: '100%',
                                 maxWidth: '1200px',
@@ -565,11 +588,11 @@ const Products = () => {
                             {filteredProducts.map(product => (
                                 <div 
                                     key={product.id} 
-                                    className="w-full max-w-sm"
                                     style={{
                                         width: '100%',
                                         maxWidth: '340px',
-                                        minWidth: '280px'
+                                        minWidth: '280px',
+                                        flexShrink: 0
                                     }}
                                 >
                                     <ProductCard product={product} />

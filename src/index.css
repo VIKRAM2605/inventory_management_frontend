@@ -16,6 +16,69 @@ html {
   padding: 0;
 }
 
+/* 🎯 MOBILE OPTIMIZATIONS */
+@media (max-width: 1023px) {
+
+  /* Disable pull-to-refresh and enable drag-to-refresh */
+  body,
+  html {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+
+  /* Ensure sticky header works */
+  .sticky-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+  }
+
+  /* Prevent horizontal scrolling issues */
+  * {
+    overflow-x: hidden;
+  }
+
+  /* Fix webkit sticky issues */
+  .app-container {
+    overflow: visible !important;
+  }
+}
+
+/* 🎯 DESKTOP OPTIMIZATIONS */
+@media (min-width: 1024px) {
+
+  body,
+  html {
+    overscroll-behavior-y: auto;
+  }
+}
+
+/* 🎯 PULL-TO-REFRESH STYLES */
+.pull-to-refresh-enabled {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 🎯 CARD CENTERING FALLBACK */
+.cards-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 16px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+.card-item {
+  width: 100% !important;
+  max-width: 340px !important;
+  min-width: 280px !important;
+  flex-shrink: 0 !important;
+}
+
 /* Make body/root container scrollable with NATIVE behavior */
 .app-container {
   height: 100vh;
@@ -24,7 +87,8 @@ html {
   /* 🔑 FIXED: Use 'auto' to preserve pull-to-refresh */
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  overscroll-behavior-y: auto; /* 🔑 CRITICAL: Allows pull-to-refresh */
+  overscroll-behavior-y: auto;
+  /* 🔑 CRITICAL: Allows pull-to-refresh */
   margin: 0;
   padding: 0;
 }
@@ -34,8 +98,10 @@ html {
    ======================================= */
 .mobile-container {
   /* 🔑 FIXED: Correct fallback order */
-  min-height: 100vh; /* Fallback first */
-  min-height: 100dvh; /* Modern second */
+  min-height: 100vh;
+  /* Fallback first */
+  min-height: 100dvh;
+  /* Modern second */
   /* 🔑 FIXED: Enhanced mobile scrolling without blocking native features */
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
@@ -91,6 +157,7 @@ html {
    ======================================= */
 /* 🔑 CRITICAL: Mobile-specific optimizations that DON'T block native features */
 @media (max-width: 1023px) {
+
   .mobile-container,
   .app-container {
     /* Hardware acceleration for smooth scrolling */
@@ -103,21 +170,21 @@ html {
     /* 🔑 CRITICAL: DON'T use contain - use auto to preserve native features */
     overscroll-behavior-y: auto;
   }
-  
+
   /* 🔑 ADDED: Ensure sufficient bottom padding for last elements */
   .mobile-container {
     /* Extra padding to ensure last cards are fully accessible */
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 60px);
   }
-  
+
   /* 🔑 ADDED: Ensure content has proper spacing */
   .mobile-container .grid {
     /* Add extra bottom margin to grid containers */
     margin-bottom: 40px;
   }
-  
+
   /* 🔑 ADDED: Ensure last product cards are fully visible */
-  .mobile-container .grid > *:last-child {
+  .mobile-container .grid>*:last-child {
     margin-bottom: 20px;
   }
 }
