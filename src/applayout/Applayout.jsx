@@ -10,14 +10,14 @@ const AppLayout = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <Navbar />
-            <main className="flex-1">
+            {/* 🔧 Use the CSS class for proper navbar spacing */}
+            <main className="flex-1 main-content">
                 <Routes>
                     <Route path="/" element={<Products />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/bills" element={<Bills />} />
                     <Route path="/inventory" element={<Inventory />} />
-                    {/* Catch all route for 404 */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>
@@ -25,7 +25,7 @@ const AppLayout = () => {
     );
 };
 
-// 404 Component
+// 404 Component remains the same
 const NotFound = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -53,6 +53,5 @@ const NotFound = () => {
         </div>
     );
 };
-
 
 export default AppLayout;

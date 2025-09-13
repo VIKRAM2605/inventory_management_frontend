@@ -1,66 +1,162 @@
 @import "tailwindcss";
 
 /* =======================================
-   GLOBAL VIEWPORT & SCROLLING SETUP
+   CSS VARIABLES
    ======================================= */
 :root {
+  --navbar-height: 80px;
   --vh: 1vh;
 }
 
-/* Lock HTML to prevent double scrollbars but preserve browser features */
-html {
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
-  margin: 0;
-  padding: 0;
+/* =======================================
+   NAVBAR LAYOUT FIXES
+   ======================================= */
+/* Navbar positioning */
+.navbar, nav, [class*="nav"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--navbar-height);
 }
 
-/* 🎯 MOBILE OPTIMIZATIONS */
-@media (max-width: 1023px) {
+/* Main content spacing to account for fixed navbar */
+.main-content {
+  padding-top: var(--navbar-height);
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100dvh - var(--navbar-height));
+}
 
-  /* ✅ ENABLE pull-to-refresh for Chrome mobile */
-  body,
-  html {
-    overscroll-behavior-y: auto; /* ✅ CHANGED FROM 'contain' TO 'auto' */
-    -webkit-overflow-scrolling: touch;
+/* =======================================
+   ERROR PORTAL Z-INDEX MANAGEMENT
+   ======================================= */
+#error-portal-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  isolation: isolate !important;
+}
+
+/* Only when error modal is active, adjust navbar */
+body.error-modal-active nav,
+body.error-modal-active .navbar,
+body.error-modal-active .nav,
+body.error-modal-active [class*="nav"],
+body.error-modal-active header,
+body.error-modal-active .header {
+  z-index: 1000 !important;
+}
+
+/* Slide-in animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* =======================================
+   GLOBAL LAYOUT - HTML OVERFLOW HIDDEN
+   ======================================= */
+html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden; /* 🔧 KEEP: overflow hidden as requested */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden; /* 🔧 BODY ALSO HIDDEN */
+}
+
+/* 🔧 APP CONTAINER - THIS IS WHERE SCROLLING HAPPENS */
+.app-container {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto; /* 🔧 SCROLLING HAPPENS HERE */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: auto;
+}
+
+/* =======================================
+   DESKTOP LAYOUT - SPECIFIC SCROLLING
+   ======================================= */
+@media (min-width: 1024px) {
+  /* Desktop specific: Only the content area should scroll */
+  .desktop-scrollable {
+    height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
     overflow-x: hidden;
   }
+  
+  /* Desktop app container adjustment */
+  .app-container {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: visible; /* Let desktop sections handle their own scrolling */
+  }
+}
 
-  /* Ensure sticky header works */
+/* =======================================
+   MOBILE OPTIMIZATIONS
+   ======================================= */
+@media (max-width: 1023px) {
+  /* Mobile: app-container handles all scrolling */
+  .app-container {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .sticky-header {
     position: sticky !important;
     top: 0 !important;
     z-index: 1000 !important;
   }
 
-  /* Prevent horizontal scrolling issues */
-  * {
-    overflow-x: hidden;
-  }
-
-  /* Fix webkit sticky issues */
-  .app-container {
-    overflow: visible !important;
-  }
-}
-
-/* 🎯 DESKTOP OPTIMIZATIONS */
-@media (min-width: 1024px) {
-
-  body,
-  html {
+  .mobile-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
     overscroll-behavior-y: auto;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 60px);
+    box-sizing: border-box;
   }
 }
 
-/* 🎯 PULL-TO-REFRESH STYLES */
-.pull-to-refresh-enabled {
-  overscroll-behavior-y: auto; /* ✅ CHANGED FROM 'contain' TO 'auto' */
-  -webkit-overflow-scrolling: touch;
+/* =======================================
+   RESPONSIVE NAVBAR
+   ======================================= */
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 70px;
+  }
 }
 
-/* 🎯 CARD CENTERING FALLBACK */
+/* =======================================
+   CARD CENTERING
+   ======================================= */
 .cards-container {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -79,40 +175,22 @@ html {
   flex-shrink: 0 !important;
 }
 
-/* Make body/root container scrollable with NATIVE behavior */
-.app-container {
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
-  /* 🔑 FIXED: Use 'auto' to preserve pull-to-refresh */
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  overscroll-behavior-y: auto;
-  /* 🔑 CRITICAL: Allows pull-to-refresh */
-  margin: 0;
-  padding: 0;
-}
-
 /* =======================================
-   MOBILE VIEWPORT & SAFE AREA
+   UTILITY CLASSES
    ======================================= */
-.mobile-container {
-  /* 🔑 FIXED: Correct fallback order */
-  min-height: 100vh;
-  /* Fallback first */
-  min-height: 100dvh;
-  /* Modern second */
-  /* 🔑 FIXED: Enhanced mobile scrolling without blocking native features */
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  /* 🔑 CRITICAL: Use 'auto' to preserve pull-to-refresh and proper scroll boundaries */
-  overscroll-behavior-y: auto;
-  /* 🔑 FIXED: Proper safe area padding that doesn't interfere with scrolling */
-  padding-bottom: env(safe-area-inset-bottom, 20px);
-  box-sizing: border-box;
+.mobile-bottom-spacing {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
 }
 
-/* Safe area support for iOS and Android gesture navigation */
+.mobile-content-spacing {
+  margin-bottom: 60px;
+}
+
+.ensure-scroll-end {
+  scroll-padding-bottom: 40px;
+}
+
+/* Safe area support */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
@@ -126,7 +204,7 @@ html {
 }
 
 /* =======================================
-   LINE-CLAMP FIX (removes VS Code warning)
+   LINE-CLAMP UTILITIES
    ======================================= */
 .line-clamp-1 {
   display: -webkit-box;
@@ -153,96 +231,10 @@ html {
 }
 
 /* =======================================
-   SMOOTH MOMENTUM WITH NATIVE FEATURES ENABLED
+   ACCESSIBILITY
    ======================================= */
-/* 🔑 CRITICAL: Mobile-specific optimizations that PRESERVE native features */
-@media (max-width: 1023px) {
-
-  .mobile-container,
-  .app-container {
-    /* Hardware acceleration for smooth scrolling */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    /* Optimize scroll performance */
-    will-change: scroll-position;
-    /* 🔑 CRITICAL: Keep native scroll behavior */
-    -webkit-overflow-scrolling: touch;
-    /* 🔑 CRITICAL: Use 'auto' to preserve native features like pull-to-refresh */
-    overscroll-behavior-y: auto;
-  }
-
-  /* 🔑 ADDED: Ensure sufficient bottom padding for last elements */
-  .mobile-container {
-    /* Extra padding to ensure last cards are fully accessible */
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 60px);
-  }
-
-  /* 🔑 ADDED: Ensure content has proper spacing */
-  .mobile-container .grid {
-    /* Add extra bottom margin to grid containers */
-    margin-bottom: 40px;
-  }
-
-  /* 🔑 ADDED: Ensure last product cards are fully visible */
-  .mobile-container .grid>*:last-child {
-    margin-bottom: 20px;
-  }
-}
-
-/* =======================================
-   ENHANCED BOTTOM SPACING FOR MOBILE
-   ======================================= */
-/* 🔑 NEW: Utility classes for proper bottom spacing */
-.mobile-bottom-spacing {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
-}
-
-.mobile-content-spacing {
-  margin-bottom: 60px;
-}
-
-/* 🔑 NEW: Ensure scrollable areas don't cut off content */
-.ensure-scroll-end {
-  scroll-padding-bottom: 40px;
-}
-
-/* =======================================
-   ADDITIONAL RESPONSIVE UTILITIES
-   ======================================= */
-/* Enhanced mobile touch interactions */
-@media (max-width: 1023px) {
-  /* Improve touch target sizes */
-  button, 
-  .button,
-  [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Optimize text selection on mobile */
-  .selectable {
-    -webkit-user-select: text;
-    user-select: text;
-  }
-
-  /* Prevent text selection on interactive elements */
-  button,
-  .button,
-  [role="button"],
-  .no-select {
-    -webkit-user-select: none;
-    user-select: none;
-  }
-}
-
-/* =======================================
-   ACCESSIBILITY ENHANCEMENTS
-   ======================================= */
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -250,23 +242,42 @@ html {
   }
 }
 
-/* Focus styles for keyboard navigation */
 .focus\:ring-2:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-/* High contrast mode support */
+/* =======================================
+   TOUCH INTERACTIONS
+   ======================================= */
+@media (max-width: 1023px) {
+  button, .button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .selectable {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  
+  button, .button, [role="button"], .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* =======================================
+   HIGH CONTRAST SUPPORT
+   ======================================= */
 @media (prefers-contrast: high) {
   .text-gray-600 {
     color: #000000 !important;
   }
-  
   .bg-gray-50 {
     background-color: #ffffff !important;
   }
-  
   .border-gray-200 {
     border-color: #000000 !important;
   }
@@ -279,19 +290,15 @@ html {
   .no-print {
     display: none !important;
   }
-  
   * {
     background: white !important;
     color: black !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
-  a,
-  a:visited {
+  a, a:visited {
     text-decoration: underline;
   }
-  
   .page-break {
     page-break-before: always;
   }
