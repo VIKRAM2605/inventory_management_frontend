@@ -19,10 +19,10 @@ html {
 /* 🎯 MOBILE OPTIMIZATIONS */
 @media (max-width: 1023px) {
 
-  /* Disable pull-to-refresh and enable drag-to-refresh */
+  /* ✅ ENABLE pull-to-refresh for Chrome mobile */
   body,
   html {
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: auto; /* ✅ CHANGED FROM 'contain' TO 'auto' */
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
   }
@@ -56,7 +56,7 @@ html {
 
 /* 🎯 PULL-TO-REFRESH STYLES */
 .pull-to-refresh-enabled {
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto; /* ✅ CHANGED FROM 'contain' TO 'auto' */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -153,9 +153,9 @@ html {
 }
 
 /* =======================================
-   SMOOTH MOMENTUM WITHOUT BLOCKING NATIVE FEATURES
+   SMOOTH MOMENTUM WITH NATIVE FEATURES ENABLED
    ======================================= */
-/* 🔑 CRITICAL: Mobile-specific optimizations that DON'T block native features */
+/* 🔑 CRITICAL: Mobile-specific optimizations that PRESERVE native features */
 @media (max-width: 1023px) {
 
   .mobile-container,
@@ -167,7 +167,7 @@ html {
     will-change: scroll-position;
     /* 🔑 CRITICAL: Keep native scroll behavior */
     -webkit-overflow-scrolling: touch;
-    /* 🔑 CRITICAL: DON'T use contain - use auto to preserve native features */
+    /* 🔑 CRITICAL: Use 'auto' to preserve native features like pull-to-refresh */
     overscroll-behavior-y: auto;
   }
 
@@ -204,4 +204,95 @@ html {
 /* 🔑 NEW: Ensure scrollable areas don't cut off content */
 .ensure-scroll-end {
   scroll-padding-bottom: 40px;
+}
+
+/* =======================================
+   ADDITIONAL RESPONSIVE UTILITIES
+   ======================================= */
+/* Enhanced mobile touch interactions */
+@media (max-width: 1023px) {
+  /* Improve touch target sizes */
+  button, 
+  .button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Optimize text selection on mobile */
+  .selectable {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* Prevent text selection on interactive elements */
+  button,
+  .button,
+  [role="button"],
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* =======================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================= */
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.focus\:ring-2:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-gray-600 {
+    color: #000000 !important;
+  }
+  
+  .bg-gray-50 {
+    background-color: #ffffff !important;
+  }
+  
+  .border-gray-200 {
+    border-color: #000000 !important;
+  }
+}
+
+/* =======================================
+   PRINT STYLES
+   ======================================= */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  .page-break {
+    page-break-before: always;
+  }
 }

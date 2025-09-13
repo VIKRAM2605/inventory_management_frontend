@@ -57,13 +57,12 @@ const Products = () => {
                 const response = await productsAPI.getAll();
                 const fetchedProducts = response.data || [];
 
-                const productsWithNumbers = fetchedProducts.map(product => ({
+                const productsWithNumbers = fetchedProducts?.map(product => ({
                     ...product,
                     id: String(product.id), // Ensure ID is string for consistency
                     price: parseFloat(product.price) || 0,
-                    image_url: product.image_url && !product.image_url.startsWith('http')
-                        ? `https://inventory-management-backend-qqqj.onrender.com/${product.image_url}`
-                        : product.image_url
+                    // Updated to use new Supabase Storage URL format
+                    image_url: product.image_url || null
                 }));
 
                 console.log('Fetched products:', productsWithNumbers.length);
@@ -142,7 +141,7 @@ const Products = () => {
 
     if (loading) {
         return (
-            <div className="app-container flex justify-center items-center bg-gray-50 p-4">
+            <div className="min-h-screen flex justify-center items-center bg-gray-50 p-4">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading products...</p>
@@ -153,7 +152,7 @@ const Products = () => {
 
     if (error) {
         return (
-            <div className="app-container bg-gray-50 p-4">
+            <div className="min-h-screen bg-gray-50 p-4">
                 <div className="max-w-2xl mx-auto">
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                         <h3 className="font-bold">Error</h3>
@@ -173,12 +172,9 @@ const Products = () => {
     }
 
     return (
-        <div className="app-container" style={{ 
-            overscrollBehaviorY: 'contain',
-            WebkitOverflowScrolling: 'touch'
-        }}>
-            {/* Desktop Layout - Fixed Header with Scrollable Content */}
-            <div className="hidden lg:flex lg:flex-col lg:bg-gray-50" style={{ height: '100vh' }}>
+        <div className="min-h-screen bg-gray-50">
+            {/* DESKTOP LAYOUT */}
+            <div className="hidden lg:flex lg:flex-col" style={{ height: '100vh' }}>
                 {/* Fixed Header Section - Desktop Only */}
                 <div className="bg-white border-b border-gray-200 flex-shrink-0">
                     <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
@@ -239,7 +235,7 @@ const Products = () => {
                                             </button>
                                         </div>
 
-                                        {/* Checkout Button - Positioned next to cart */}
+                                        {/* Checkout Button */}
                                         <button
                                             onClick={handleCheckout}
                                             className="bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg shadow-md hover:bg-green-700 transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 text-sm sm:text-base font-medium"
@@ -322,28 +318,18 @@ const Products = () => {
                 </div>
 
                 {/* Desktop: Scrollable Products Section */}
-                <div className="flex-1" style={{ 
-                    minHeight: 0, 
-                    overflow: 'visible' 
-                }}>
-                    <div 
-                        className="h-full"
-                        style={{ 
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            WebkitOverflowScrolling: 'touch'
-                        }}
-                    >
-                        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                            {/* Fixed Desktop Grid Layout */}
-                            <div className="grid gap-6 w-full" style={{
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                <div className="flex-1 overflow-hidden">
+                    <div className="h-full overflow-y-auto">
+                        <div className="px-4 sm:px-6 lg:px-8 py-6">
+                            {/* Desktop Grid Layout - Much Smaller Cards */}
+                            <div className="grid gap-3 w-full" style={{
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
                                 justifyItems: 'stretch',
                                 alignItems: 'start'
                             }}>
                                 {filteredProducts.map(product => (
                                     <div key={product.id} className="w-full">
-                                        <ProductCard product={product} />
+                                        <ProductCard product={product} compact={true} />
                                     </div>
                                 ))}
                             </div>
@@ -411,34 +397,31 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* 🎯 MOBILE LAYOUT - STICKY HEADER + CENTERED CARDS + PULL-TO-REFRESH */}
+            {/* MOBILE LAYOUT */}
             <div 
                 className="block lg:hidden"
-                style={{ 
-                    height: '100vh',
-                    overflow: 'visible',
-                    overscrollBehaviorY: 'contain'
+                style={{
+                    /* Enable Chrome pull-to-refresh */
+                    overscrollBehaviorY: 'auto',
+                    WebkitOverflowScrolling: 'touch'
                 }}
             >
-                {/* 🎯 STICKY MOBILE HEADER */}
+                {/* STICKY MOBILE HEADER */}
                 <div 
-                    className="bg-white border-b border-gray-200"
+                    className="bg-white border-b border-gray-200 sticky top-0 z-50"
                     style={{
-                        position: 'sticky',
-                        top: 0,
-                        zIndex: 1000,
-                        overflow: 'visible'
+                        WebkitBackfaceVisibility: 'hidden',
+                        backfaceVisibility: 'hidden'
                     }}
                 >
-                    <div className="px-4 py-4">
-                        {/* Header */}
-                        <div className="flex flex-col space-y-4">
-                            <div className="flex flex-col justify-between items-start space-y-3">
+                    <div className="px-4 py-3">
+                        <div className="flex flex-col space-y-3">
+                            <div className="flex flex-col space-y-2">
                                 <div className="flex-1 w-full">
-                                    <h1 className="text-2xl font-bold text-gray-900">
+                                    <h1 className="text-xl font-bold text-gray-900">
                                         Products
                                     </h1>
-                                    <p className="text-sm text-gray-600 mt-1">
+                                    <p className="text-xs text-gray-600">
                                         {filteredProducts.length !== products.length ? (
                                             <>
                                                 <span className="font-semibold">{filteredProducts.length}</span>
@@ -464,12 +447,12 @@ const Products = () => {
 
                                 {/* Mobile Cart Summary & Checkout */}
                                 {totalCartItems > 0 && (
-                                    <div className="flex flex-col space-y-2 w-full">
+                                    <div className="flex space-x-2 w-full">
                                         {/* Cart Summary */}
-                                        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-2 rounded-lg flex items-center justify-between w-full">
-                                            <div className="text-sm">
+                                        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-3 py-2 rounded-lg flex items-center justify-between flex-1">
+                                            <div className="text-xs">
                                                 <span className="font-semibold">{totalCartItems}</span>
-                                                <span className="mx-2">items •</span>
+                                                <span className="mx-1">items •</span>
                                                 <span className="font-bold">₹{totalCartValue.toFixed(0)}</span>
                                             </div>
                                             <button
@@ -477,7 +460,7 @@ const Products = () => {
                                                 className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors"
                                                 title="Clear cart"
                                             >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </button>
@@ -486,13 +469,13 @@ const Products = () => {
                                         {/* Checkout Button */}
                                         <button
                                             onClick={handleCheckout}
-                                            className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all duration-200 flex items-center justify-center space-x-2 text-sm font-medium w-full"
+                                            className="bg-green-600 text-white px-3 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all duration-200 flex items-center space-x-1 text-xs font-medium"
                                         >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0L17 18m-8 0h8m-8 0V9a3 3 0 616 0v9" />
                                             </svg>
                                             <span>Checkout</span>
-                                            <span className="bg-white text-green-600 px-2 py-1 rounded-full text-xs font-bold min-w-6 text-center">
+                                            <span className="bg-white text-green-600 px-1.5 py-0.5 rounded-full text-xs font-bold min-w-5 text-center">
                                                 {totalCartItems}
                                             </span>
                                         </button>
@@ -501,7 +484,7 @@ const Products = () => {
                             </div>
 
                             {/* Mobile Filters */}
-                            <div className="flex flex-col space-y-3">
+                            <div className="flex flex-col space-y-2">
                                 {/* Search Input */}
                                 <div className="relative">
                                     <input
@@ -509,15 +492,15 @@ const Products = () => {
                                         placeholder="Search products..."
                                         value={searchTerm}
                                         onChange={(e) => handleSearchChange(e.target.value)}
-                                        className="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        className="w-full px-3 py-2 pl-9 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                                     />
-                                    <svg className="absolute left-3.5 top-3.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                     {searchTerm && (
                                         <button
                                             onClick={handleClearSearch}
-                                            className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                                            className="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600"
                                         >
                                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -527,11 +510,11 @@ const Products = () => {
                                 </div>
 
                                 {/* Category & Refresh */}
-                                <div className="flex gap-3">
+                                <div className="flex gap-2">
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => handleCategoryChange(e.target.value)}
-                                        className="flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                                     >
                                         <option value="">
                                             {getAllCategoriesText()}
@@ -547,7 +530,7 @@ const Products = () => {
                                         onClick={() => {
                                             window.location.reload();
                                         }}
-                                        className="px-3 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center flex-shrink-0"
+                                        className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center flex-shrink-0"
                                         title="Refresh products"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,27 +543,21 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* 🎯 MOBILE SCROLLABLE CONTENT WITH CENTERED CARDS */}
+                {/* MOBILE SCROLLABLE CONTENT WITH CENTERED CARDS */}
                 <div 
-                    className="bg-gray-50"
+                    className="bg-gray-50 overflow-y-auto"
                     style={{ 
-                        minHeight: 'calc(100vh - 280px)',
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
+                        height: 'calc(100vh - 180px)',
                         WebkitOverflowScrolling: 'touch',
-                        overscrollBehaviorY: 'contain'
+                        /* Enable pull-to-refresh in mobile browsers */
+                        overscrollBehaviorY: 'auto'
                     }}
                 >
-                    <div className="px-4 py-6">
-                        {/* 🎯 PERFECTLY CENTERED CARDS LAYOUT FOR MOBILE */}
+                    <div className="px-4 py-4">
+                        {/* CENTERED CARDS LAYOUT FOR MOBILE */}
                         <div 
+                            className="flex flex-wrap justify-center gap-3"
                             style={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                                gap: '16px',
-                                width: '100%',
                                 maxWidth: '1200px',
                                 margin: '0 auto'
                             }}
@@ -588,14 +565,13 @@ const Products = () => {
                             {filteredProducts.map(product => (
                                 <div 
                                     key={product.id} 
+                                    className="w-full max-w-sm"
                                     style={{
-                                        width: '100%',
-                                        maxWidth: '340px',
                                         minWidth: '280px',
-                                        flexShrink: 0
+                                        maxWidth: '320px'
                                     }}
                                 >
-                                    <ProductCard product={product} />
+                                    <ProductCard product={product} compact={true} />
                                 </div>
                             ))}
                         </div>
