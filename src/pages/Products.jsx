@@ -57,11 +57,15 @@ const Products = () => {
                 const response = await productsAPI.getAll();
                 const fetchedProducts = response.data || [];
 
-                const productsWithNumbers = fetchedProducts?.map(product => ({
+                if (!Array.isArray(fetchedProducts)) {
+                    console.error('Expected array but got:', typeof fetchedProducts, fetchedProducts);
+                    throw new Error('Invalid response format from server');
+                }
+
+                const productsWithNumbers = fetchedProducts.map(product => ({
                     ...product,
-                    id: String(product.id), // Ensure ID is string for consistency
+                    id: String(product.id),
                     price: parseFloat(product.price) || 0,
-                    // Updated to use new Supabase Storage URL format
                     image_url: product.image_url || null
                 }));
 
@@ -398,7 +402,7 @@ const Products = () => {
             </div>
 
             {/* MOBILE LAYOUT */}
-            <div 
+            <div
                 className="block lg:hidden"
                 style={{
                     /* Enable Chrome pull-to-refresh */
@@ -407,7 +411,7 @@ const Products = () => {
                 }}
             >
                 {/* STICKY MOBILE HEADER */}
-                <div 
+                <div
                     className="bg-white border-b border-gray-200 sticky top-0 z-50"
                     style={{
                         WebkitBackfaceVisibility: 'hidden',
@@ -544,9 +548,9 @@ const Products = () => {
                 </div>
 
                 {/* MOBILE SCROLLABLE CONTENT WITH CENTERED CARDS */}
-                <div 
+                <div
                     className="bg-gray-50 overflow-y-auto"
-                    style={{ 
+                    style={{
                         height: 'calc(100vh - 180px)',
                         WebkitOverflowScrolling: 'touch',
                         /* Enable pull-to-refresh in mobile browsers */
@@ -555,7 +559,7 @@ const Products = () => {
                 >
                     <div className="px-4 py-4">
                         {/* CENTERED CARDS LAYOUT FOR MOBILE */}
-                        <div 
+                        <div
                             className="flex flex-wrap justify-center gap-3"
                             style={{
                                 maxWidth: '1200px',
@@ -563,8 +567,8 @@ const Products = () => {
                             }}
                         >
                             {filteredProducts.map(product => (
-                                <div 
-                                    key={product.id} 
+                                <div
+                                    key={product.id}
                                     className="w-full max-w-sm"
                                     style={{
                                         minWidth: '280px',
