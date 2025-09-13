@@ -396,35 +396,41 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* 🔥 FIXED: Mobile/Tablet Layout with FIXED Header + Scrollable Content */}
-            <div className="block lg:hidden bg-gray-50 mobile-container mobile-bottom-spacing ensure-scroll-end" style={{ height: '100vh' }}>
-                {/* 🔥 FIXED: Mobile Fixed Header */}
-                <div className="bg-white border-b border-gray-200 flex-shrink-0">
-                    <div className="px-4 py-4 sm:py-5">
+            {/* Mobile/Tablet Layout - FIXED HEADER + CENTERED CARDS */}
+            <div className="block lg:hidden bg-gray-50">
+                {/* 🎯 FIXED MOBILE HEADER - Stays at top */}
+                <div 
+                    className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50"
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        zIndex: 1000
+                    }}
+                >
+                    <div className="px-4 py-4">
                         {/* Header */}
                         <div className="flex flex-col space-y-4">
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
-                                <div className="flex-1">
-                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            <div className="flex flex-col justify-between items-start space-y-3">
+                                <div className="flex-1 w-full">
+                                    <h1 className="text-2xl font-bold text-gray-900">
                                         Products
                                     </h1>
-                                    <p className="text-sm sm:text-base text-gray-600 mt-1">
+                                    <p className="text-sm text-gray-600 mt-1">
                                         {filteredProducts.length !== products.length ? (
                                             <>
                                                 <span className="font-semibold">{filteredProducts.length}</span>
-                                                <span className="hidden sm:inline"> of {products.length} products</span>
-                                                <span className="sm:hidden">/{products.length}</span>
+                                                <span>/{products.length}</span>
                                                 {selectedCategory && (
                                                     <>
-                                                        <span className="hidden sm:inline"> in </span>
-                                                        <span className="sm:hidden"> • </span>
+                                                        <span> • </span>
                                                         {toTitleCase(selectedCategory)}
                                                     </>
                                                 )}
                                                 {searchTerm && (
                                                     <>
-                                                        <span className="hidden sm:inline"> matching "</span>
-                                                        <span className="sm:hidden"> • "</span>
+                                                        <span> • "</span>
                                                         {searchTerm}"
                                                     </>
                                                 )}
@@ -437,9 +443,9 @@ const Products = () => {
 
                                 {/* Mobile Cart Summary & Checkout */}
                                 {totalCartItems > 0 && (
-                                    <div className="flex flex-col space-y-2 w-full sm:w-auto">
+                                    <div className="flex flex-col space-y-2 w-full">
                                         {/* Cart Summary */}
-                                        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-2 rounded-lg flex items-center justify-between">
+                                        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-2 rounded-lg flex items-center justify-between w-full">
                                             <div className="text-sm">
                                                 <span className="font-semibold">{totalCartItems}</span>
                                                 <span className="mx-2">items •</span>
@@ -533,86 +539,103 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* 🔥 FIXED: Mobile Scrollable Content Only */}
+                {/* 🎯 MOBILE SCROLLABLE CONTENT - Starts below fixed header */}
                 <div 
-                    className="flex-1 overflow-y-auto px-4 py-4 mobile-content-spacing"
-                    style={{ 
-                        minHeight: 0,
-                        WebkitOverflowScrolling: 'touch',
-                        overflowY: 'auto'
+                    className="pt-80 pb-6 min-h-screen overflow-y-auto"
+                    style={{
+                        paddingTop: totalCartItems > 0 ? '320px' : '240px', // Dynamic padding based on header height
+                        minHeight: '100vh',
+                        WebkitOverflowScrolling: 'touch'
                     }}
                 >
-                    {/* Fixed Mobile Grid Layout */}
-                    <div className="grid gap-4 w-full mobile-content-spacing" style={{
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                        justifyItems: 'stretch',
-                        alignItems: 'start'
-                    }}>
-                        {filteredProducts.map(product => (
-                            <div key={product.id} className="w-full">
-                                <ProductCard product={product} />
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Mobile No Products Found */}
-                    {filteredProducts.length === 0 && (
-                        <div className="text-center py-8 px-4 safe-bottom">
-                            <div className="text-4xl mb-4">📦</div>
-                            <p className="text-gray-500 text-base mb-4">
-                                {products.length === 0
-                                    ? 'No products available'
-                                    : searchTerm || selectedCategory
-                                        ? 'No matching products found'
-                                        : 'No products to display'
-                                }
-                            </p>
-
-                            {searchTerm && (
-                                <div className="space-y-3">
-                                    <p className="text-gray-400 text-sm">
-                                        Try different keywords for "{searchTerm}"
-                                    </p>
-                                    <button
-                                        onClick={handleClearSearch}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                        Clear Search
-                                    </button>
+                    <div className="px-4">
+                        {/* 🎯 CENTERED CARDS LAYOUT FOR MOBILE */}
+                        <div 
+                            className="flex flex-wrap justify-center gap-4 w-full max-w-6xl mx-auto"
+                            style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                justifyContent: 'center',
+                                gap: '16px',
+                                width: '100%',
+                                maxWidth: '1200px',
+                                margin: '0 auto'
+                            }}
+                        >
+                            {filteredProducts.map(product => (
+                                <div 
+                                    key={product.id} 
+                                    className="w-full max-w-sm"
+                                    style={{
+                                        width: '100%',
+                                        maxWidth: '340px',
+                                        minWidth: '280px'
+                                    }}
+                                >
+                                    <ProductCard product={product} />
                                 </div>
-                            )}
-
-                            {selectedCategory && !searchTerm && (
-                                <div className="space-y-3">
-                                    <p className="text-gray-400 text-sm">
-                                        No products in {toTitleCase(selectedCategory)}
-                                    </p>
-                                    <button
-                                        onClick={() => handleCategoryChange('')}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                        Show All Categories
-                                    </button>
-                                </div>
-                            )}
-
-                            {!searchTerm && !selectedCategory && products.length === 0 && (
-                                <div className="space-y-3">
-                                    <p className="text-gray-400 text-sm">
-                                        Contact admin to add products
-                                    </p>
-                                    <button
-                                        onClick={() => {
-                                            window.location.reload();
-                                        }}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                        Check for Products
-                                    </button>
-                                </div>
-                            )}
+                            ))}
                         </div>
-                    )}
+
+                        {/* Mobile No Products Found */}
+                        {filteredProducts.length === 0 && (
+                            <div className="text-center py-8 px-4">
+                                <div className="text-4xl mb-4">📦</div>
+                                <p className="text-gray-500 text-base mb-4">
+                                    {products.length === 0
+                                        ? 'No products available'
+                                        : searchTerm || selectedCategory
+                                            ? 'No matching products found'
+                                            : 'No products to display'
+                                    }
+                                </p>
+
+                                {searchTerm && (
+                                    <div className="space-y-3">
+                                        <p className="text-gray-400 text-sm">
+                                            Try different keywords for "{searchTerm}"
+                                        </p>
+                                        <button
+                                            onClick={handleClearSearch}
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                        >
+                                            Clear Search
+                                        </button>
+                                    </div>
+                                )}
+
+                                {selectedCategory && !searchTerm && (
+                                    <div className="space-y-3">
+                                        <p className="text-gray-400 text-sm">
+                                            No products in {toTitleCase(selectedCategory)}
+                                        </p>
+                                        <button
+                                            onClick={() => handleCategoryChange('')}
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                        >
+                                            Show All Categories
+                                        </button>
+                                    </div>
+                                )}
+
+                                {!searchTerm && !selectedCategory && products.length === 0 && (
+                                    <div className="space-y-3">
+                                        <p className="text-gray-400 text-sm">
+                                            Contact admin to add products
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                window.location.reload();
+                                            }}
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                        >
+                                            Check for Products
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
