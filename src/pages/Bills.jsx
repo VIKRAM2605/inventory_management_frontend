@@ -54,8 +54,10 @@ const Bills = () => {
     if (loading) {
         return (
             <div className="app-container flex justify-center items-center bg-gray-50 p-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                <p className="ml-4 text-gray-600">Loading bills...</p>
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading bills...</p>
+                </div>
             </div>
         );
     }
@@ -82,8 +84,8 @@ const Bills = () => {
     return (
         <div className="app-container">
             {/* Desktop Layout */}
-            <div className="hidden lg:flex lg:flex-col lg:bg-gray-50" style={{ height: '100vh' }}>
-                {/* Fixed Header */}
+            <div className="hidden lg:flex lg:flex-col lg:bg-gray-50 lg:h-screen">
+                {/* Desktop Fixed Header */}
                 <div className="bg-white border-b border-gray-200 shadow-sm flex-shrink-0">
                     <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
@@ -274,16 +276,16 @@ const Bills = () => {
                 </div>
             </div>
 
-            {/* Mobile/Tablet Layout with Safe Area Support */}
-            <div className="block lg:hidden bg-gray-50 mobile-container mobile-bottom-spacing ensure-scroll-end">
-                {/* Header Section - Mobile/Tablet */}
-                <div className="bg-white border-b border-gray-200">
+            {/* 🔧 MOBILE LAYOUT WITH ENHANCED SAFE AREA SUPPORT */}
+            <div className="block lg:hidden bg-gray-50">
+                {/* Mobile Header - Sticky */}
+                <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
                     <div className="px-4 py-4 sm:py-6">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Bills & Invoices</h1>
                                 <p className="text-sm text-gray-600 mt-1">
-                                    Manage and view all customer invoices and billing records
+                                    Manage customer invoices and billing records
                                 </p>
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
@@ -312,12 +314,17 @@ const Bills = () => {
                     </div>
                 </div>
 
-                {/* Mobile Bills Content with Safe Area Bottom Padding */}
-                <div className="px-4 py-4 mobile-content-spacing">
-                    <div className="space-y-4 mobile-content-spacing">
+                {/* 🔧 MOBILE BILLS CONTENT WITH COMPREHENSIVE SAFE AREA */}
+                <div className="px-4 py-4 mobile-bills-container">
+                    <div className="space-y-4 mobile-bills-grid">
                         {bills.length > 0 ? (
-                            bills.map((bill) => (
-                                <div key={bill.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
+                            bills.map((bill, index) => (
+                                <div 
+                                    key={bill.id} 
+                                    className={`bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all ${
+                                        index === bills.length - 1 ? 'mobile-last-bill-card' : ''
+                                    }`}
+                                >
                                     {/* Card Header */}
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
@@ -367,7 +374,7 @@ const Bills = () => {
                                                 <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                                 </svg>
-                                                {toTitleCase(bill.payment_method)}
+                                                {toTitleCase(bill.payment_method || 'Cash')}
                                             </p>
                                         </div>
                                     </div>
@@ -411,7 +418,7 @@ const Bills = () => {
                                 </div>
                             ))
                         ) : (
-                            <div className="bg-white rounded-lg shadow-md text-center py-12 safe-bottom">
+                            <div className="bg-white rounded-lg shadow-md text-center py-12 mobile-empty-state">
                                 <div className="text-4xl mb-4">📄</div>
                                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Bills Found</h3>
                                 <p className="text-gray-500 text-sm mb-6">

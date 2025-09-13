@@ -188,10 +188,10 @@ const BillPDF = ({ bill, onClose }) => {
     }
   };
 
-  // 🔑 CRITICAL: Modal content for portal rendering
+  // 🔑 CRITICAL: Modal content for portal rendering with safe area support
   const modalContent = (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center bill-pdf-modal"
       style={{
         position: 'fixed',
         top: 0,
@@ -472,9 +472,9 @@ const BillPDF = ({ bill, onClose }) => {
             </div>
           </div>
 
-          {/* Mobile Layout */}
+          {/* 🔧 MOBILE LAYOUT WITH ENHANCED SAFE AREA SUPPORT */}
           <div 
-            className="block lg:hidden bg-white rounded-lg shadow-2xl"
+            className="block lg:hidden bg-white rounded-lg shadow-2xl mobile-bill-modal"
             style={{
               width: 'min(95vw, 600px)',
               maxHeight: '95vh',
@@ -502,9 +502,9 @@ const BillPDF = ({ bill, onClose }) => {
               </button>
             </div>
 
-            {/* Mobile: Scrollable PDF Content */}
+            {/* 🔧 MOBILE: SCROLLABLE PDF CONTENT WITH SAFE AREA */}
             <div 
-              className="flex-1 overflow-y-auto p-4 sm:p-6" 
+              className="flex-1 overflow-y-auto p-4 sm:p-6 mobile-bill-content" 
               style={{ 
                 minHeight: 0,
                 WebkitOverflowScrolling: 'touch'
@@ -705,8 +705,8 @@ const BillPDF = ({ bill, onClose }) => {
               </div>
             </div>
 
-            {/* Mobile Action Buttons */}
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 p-3 sm:p-4 bg-gray-50 rounded-b-lg border-t flex-shrink-0">
+            {/* 🔧 MOBILE ACTION BUTTONS WITH SAFE AREA SUPPORT */}
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 p-3 sm:p-4 bg-gray-50 rounded-b-lg border-t flex-shrink-0 mobile-bill-actions">
               <button
                 onClick={generateFormattedPDF}
                 className="flex-1 bg-blue-600 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center text-sm sm:text-base"

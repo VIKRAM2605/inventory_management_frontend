@@ -325,7 +325,7 @@ const Products = () => {
                     {/* Desktop Products Grid */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                            <div className="grid gap-6 w-full" style={{
+                            <div className="grid gap-4 w-full" style={{
                                 gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                                 justifyItems: 'stretch',
                                 alignItems: 'start'
@@ -355,7 +355,7 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* Mobile Layout */}
+                {/* Mobile Layout with Safe Area Support */}
                 <div className="block lg:hidden">
                     {/* Mobile Header */}
                     <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -463,9 +463,9 @@ const Products = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Products Grid */}
-                    <div className="bg-gray-50 px-4 py-6">
-                        <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto">
+                    {/* 🔧 MOBILE PRODUCTS GRID WITH SAFE AREA SUPPORT */}
+                    <div className="bg-gray-50 px-4 py-6 mobile-content-container">
+                        <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto mobile-products-grid">
                             {filteredProducts.map(product => (
                                 <div 
                                     key={product.id} 
@@ -478,7 +478,7 @@ const Products = () => {
                         </div>
                         
                         {filteredProducts.length === 0 && (
-                            <div className="text-center py-12">
+                            <div className="text-center py-12 ios-safe-bottom">
                                 <div className="text-4xl mb-4">📦</div>
                                 <p className="text-gray-500 mb-4">No products found</p>
                                 {searchTerm && (

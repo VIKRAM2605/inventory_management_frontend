@@ -72,7 +72,7 @@ html {
   padding: 0;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden; /* 🔧 KEEP: overflow hidden as requested */
+  overflow: hidden;
 }
 
 body {
@@ -80,15 +80,15 @@ body {
   padding: 0;
   height: 100vh;
   height: 100dvh;
-  overflow: hidden; /* 🔧 BODY ALSO HIDDEN */
+  overflow: hidden;
 }
 
-/* 🔧 APP CONTAINER - THIS IS WHERE SCROLLING HAPPENS */
+/* APP CONTAINER - THIS IS WHERE SCROLLING HAPPENS */
 .app-container {
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  overflow-y: auto; /* 🔧 SCROLLING HAPPENS HERE */
+  overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
@@ -110,12 +110,12 @@ body {
   .app-container {
     height: 100vh;
     height: 100dvh;
-    overflow-y: visible; /* Let desktop sections handle their own scrolling */
+    overflow-y: visible;
   }
 }
 
 /* =======================================
-   MOBILE OPTIMIZATIONS
+   MOBILE OPTIMIZATIONS WITH SAFE AREA
    ======================================= */
 @media (max-width: 1023px) {
   /* Mobile: app-container handles all scrolling */
@@ -134,14 +134,61 @@ body {
     z-index: 1000 !important;
   }
 
-  .mobile-container {
-    min-height: 100vh;
-    min-height: 100dvh;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    overscroll-behavior-y: auto;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 60px);
-    box-sizing: border-box;
+  /* 🔧 BILLS-SPECIFIC MOBILE SAFE AREA CLASSES */
+  .mobile-bills-container {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 80px);
+    min-height: calc(100vh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+  }
+  
+  .mobile-bills-grid {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
+  }
+  
+  .mobile-last-bill-card {
+    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 30px) !important;
+  }
+  
+  .mobile-empty-state {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
+    margin-bottom: calc(env(safe-area-inset-bottom, 15px) + 25px);
+  }
+
+  /* 🔧 BILL PDF MODAL SAFE AREA CLASSES */
+  .bill-pdf-modal {
+    padding: calc(env(safe-area-inset-top, 10px) + 16px) 
+             calc(env(safe-area-inset-right, 16px)) 
+             calc(env(safe-area-inset-bottom, 10px) + 16px) 
+             calc(env(safe-area-inset-left, 16px)) !important;
+  }
+  
+  .mobile-bill-modal {
+    margin-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
+  }
+  
+  .mobile-bill-content {
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
+  }
+  
+  .mobile-bill-actions {
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 12px) !important;
+  }
+
+  /* 🔧 GENERAL MOBILE CONTENT WITH SAFE AREA */
+  .mobile-content-container {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 60px);
+    min-height: calc(100vh - var(--navbar-height) - env(safe-area-inset-bottom, 0px));
+  }
+  
+  .mobile-products-grid {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
+  }
+  
+  .mobile-products-grid > *:last-child {
+    margin-bottom: calc(env(safe-area-inset-bottom, 10px) + 20px);
+  }
+  
+  .ios-safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 30px);
   }
 }
 
@@ -151,6 +198,132 @@ body {
 @media (max-width: 768px) {
   :root {
     --navbar-height: 70px;
+  }
+}
+
+/* =======================================
+   ENHANCED SAFE AREA SUPPORT
+   ======================================= */
+
+/* Base safe area support */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+  }
+  
+  .mobile-bottom-spacing {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+  }
+  
+  @media (max-width: 1023px) {
+    .mobile-content-container {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 60px);
+    }
+    
+    .mobile-products-grid {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
+    }
+    
+    /* Bills-specific safe area with env() support */
+    .mobile-bills-container {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+    }
+    
+    .mobile-bills-grid {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
+    }
+    
+    .mobile-last-bill-card {
+      margin-bottom: calc(env(safe-area-inset-bottom) + 30px) !important;
+    }
+    
+    .mobile-empty-state {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 40px);
+      margin-bottom: calc(env(safe-area-inset-bottom) + 25px);
+    }
+
+    /* 🔧 BILL PDF MODAL WITH ENV() SUPPORT */
+    .bill-pdf-modal {
+      padding: calc(env(safe-area-inset-top) + 16px) 
+               calc(env(safe-area-inset-right) + 16px) 
+               calc(env(safe-area-inset-bottom) + 16px) 
+               calc(env(safe-area-inset-left) + 16px) !important;
+    }
+    
+    .mobile-bill-modal {
+      margin-bottom: calc(env(safe-area-inset-bottom) + 20px);
+    }
+    
+    .mobile-bill-content {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+    }
+    
+    .mobile-bill-actions {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
+    }
+    
+    .ios-safe-bottom {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 30px);
+    }
+  }
+}
+
+@supports not (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: 40px;
+  }
+  
+  .mobile-bottom-spacing {
+    padding-bottom: 100px;
+  }
+  
+  @media (max-width: 1023px) {
+    .mobile-content-container {
+      padding-bottom: 80px;
+    }
+    
+    .mobile-products-grid {
+      padding-bottom: 60px;
+    }
+    
+    /* Bills-specific fallback safe area */
+    .mobile-bills-container {
+      padding-bottom: 100px;
+    }
+    
+    .mobile-bills-grid {
+      padding-bottom: 60px;
+    }
+    
+    .mobile-last-bill-card {
+      margin-bottom: 45px !important;
+    }
+    
+    .mobile-empty-state {
+      padding-bottom: 60px;
+      margin-bottom: 40px;
+    }
+
+    /* 🔧 BILL PDF MODAL FALLBACK SAFE AREA */
+    .bill-pdf-modal {
+      padding: 26px !important;
+    }
+    
+    .mobile-bill-modal {
+      margin-bottom: 30px;
+    }
+    
+    .mobile-bill-content {
+      padding-bottom: 30px;
+    }
+    
+    .mobile-bill-actions {
+      padding-bottom: 22px !important;
+    }
+    
+    .ios-safe-bottom {
+      padding-bottom: 50px;
+    }
   }
 }
 
@@ -178,29 +351,12 @@ body {
 /* =======================================
    UTILITY CLASSES
    ======================================= */
-.mobile-bottom-spacing {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
-}
-
 .mobile-content-spacing {
   margin-bottom: 60px;
 }
 
 .ensure-scroll-end {
   scroll-padding-bottom: 40px;
-}
-
-/* Safe area support */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-}
-
-@supports not (padding-bottom: env(safe-area-inset-bottom)) {
-  .safe-bottom {
-    padding-bottom: 20px;
-  }
 }
 
 /* =======================================
