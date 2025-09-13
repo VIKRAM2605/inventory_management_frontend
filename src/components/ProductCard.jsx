@@ -62,9 +62,9 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 overflow-hidden h-[320px] sm:h-[340px] flex flex-col w-full min-w-[240px] sm:min-w-[260px] max-w-[320px]">
-      {/* Product Image - Compact but fully visible */}
-      <div className="relative h-[140px] sm:h-[150px] bg-gray-50 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 overflow-hidden h-[400px] sm:h-[440px] lg:h-[480px] flex flex-col w-full min-w-[280px] sm:min-w-[300px] lg:min-w-[320px] max-w-[400px]">
+      {/* Product Image - Better proportions */}
+      <div className="relative h-[160px] sm:h-[180px] lg:h-[200px] bg-gray-50 overflow-hidden">
         <img
           src={getImageSrc()}
           alt={product.name}
@@ -81,8 +81,8 @@ const ProductCard = ({ product }) => {
           }}
         />
 
-        {/* Stock Badge - Compact */}
-        <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold shadow-sm ${
+        {/* Stock Badge - Better positioning */}
+        <div className={`absolute top-3 right-3 px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm ${
           product.stock_quantity > 10 
             ? 'bg-green-100 text-green-800' 
             : product.stock_quantity > 0
@@ -93,26 +93,26 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
 
-      {/* Product Info - Compact layout */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+      {/* Product Info - Better spacing and proportions */}
+      <div className="p-4 sm:p-5 lg:p-6 flex-1 flex flex-col justify-between">
         <div className="flex-1">
-          {/* Product Name - Compact */}
-          <h3 className="font-semibold text-sm sm:text-base text-gray-800 mb-2 line-clamp-2 leading-tight min-h-[2.5rem]">
+          {/* Product Name - Better height allocation */}
+          <h3 className="font-semibold text-base sm:text-lg lg:text-xl text-gray-800 mb-3 line-clamp-2 leading-tight min-h-[3rem] sm:min-h-[3.5rem]">
             {toTitleCase(product.name)}
           </h3>
 
-          {/* Brand and Category - Compact */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs sm:text-sm text-blue-600 font-medium truncate max-w-[60%]">
+          {/* Brand and Category - Better spacing */}
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm sm:text-base lg:text-lg text-blue-600 font-medium truncate max-w-[65%]">
               {toTitleCase(product.brand) || 'No Brand'}
             </span>
-            <span className="text-[10px] sm:text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full whitespace-nowrap">
+            <span className="text-xs sm:text-sm lg:text-base bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full whitespace-nowrap">
               {toTitleCase(product.category)}
             </span>
           </div>
 
-          {/* Description - Compact */}
-          <p className="text-gray-600 text-xs sm:text-sm mb-2 line-clamp-2 leading-relaxed min-h-[2.5rem]">
+          {/* Description - Better proportions */}
+          <p className="text-gray-600 text-sm sm:text-base lg:text-lg mb-4 line-clamp-3 leading-relaxed min-h-[4rem] sm:min-h-[4.5rem]">
             {product.description 
               ? product.description.charAt(0).toUpperCase() + product.description.slice(1).toLowerCase()
               : 'No description available'
@@ -120,38 +120,38 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
 
-        {/* Bottom Section - Compact */}
-        <div className="space-y-2">
-          {/* Price and SKU - Compact */}
+        {/* Bottom Section - Fixed height */}
+        <div className="space-y-4">
+          {/* Price and SKU - Better spacing */}
           <div className="flex items-center justify-between">
-            <span className="text-lg sm:text-xl font-bold text-green-600">₹{product.price}</span>
-            <span className="text-[10px] sm:text-xs text-gray-500 font-mono">
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600">₹{product.price}</span>
+            <span className="text-xs sm:text-sm lg:text-base text-gray-500 font-mono">
               SKU: {product.sku?.toUpperCase()}
             </span>
           </div>
 
-          {/* Cart Controls - Compact */}
+          {/* Cart Controls - Better proportions */}
           {cartQuantity > 0 ? (
-            <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2">
+            <div className="flex items-center justify-between bg-blue-50 rounded-xl p-4 lg:p-5">
               <button
                 onClick={handleRemoveFromCart}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors text-base lg:text-lg font-bold"
                 title="Remove one item"
               >
                 −
               </button>
-              <div className="flex flex-col items-center px-2">
-                <span className="font-semibold text-blue-800 text-xs sm:text-sm">
+              <div className="flex flex-col items-center px-3 lg:px-4">
+                <span className="font-semibold text-blue-800 text-base lg:text-lg">
                   {cartQuantity} In Cart
                 </span>
-                <span className="text-[10px] sm:text-xs text-green-600 font-bold">
+                <span className="text-sm lg:text-base text-green-600 font-bold">
                   ₹{(product.price * cartQuantity).toFixed(0)}
                 </span>
               </div>
               <button
                 onClick={handleAddToCart}
                 disabled={cartQuantity >= product.stock_quantity}
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-bold"
+                className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-base lg:text-lg font-bold"
                 title="Add one more item"
               >
                 +
@@ -161,7 +161,7 @@ const ProductCard = ({ product }) => {
             <button
               onClick={handleAddToCart}
               disabled={product.stock_quantity === 0}
-              className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+              className="w-full bg-blue-600 text-white py-4 lg:py-5 px-5 lg:px-6 rounded-xl font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 text-base lg:text-lg"
             >
               {product.stock_quantity === 0 ? 'Out Of Stock' : 'Add To Cart'}
             </button>
