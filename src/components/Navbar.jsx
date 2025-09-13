@@ -55,7 +55,7 @@ const Navbar = () => {
                         className="text-white font-bold text-lg sm:text-xl lg:text-2xl flex-shrink-0"
                         onClick={closeMobileMenu}
                     >
-                        <span className="hidden sm:inline">Ramji Electrical Shop</span>
+                        <span className="hidden sm:inline">Ramji Electronics Shop</span>
                         <span className="sm:hidden">Ramji Electrical Shop</span>
                     </Link>
                     
